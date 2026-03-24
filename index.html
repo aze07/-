@@ -79,6 +79,34 @@
             font-weight: bold;
         }
 
+        /* ------------------------------------- */
+        /* تصميم شريط التحميل المسبق (Buffer Bar CSS) */
+        /* ------------------------------------- */
+        .buffer-container {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .buffer-bar {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6); /* لون رمادي فاتح شفاف */
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .buffer-text {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 8px;
+            text-align: right;
+            font-weight: bold;
+        }
+
         /* شريط البحث (Search Bar) */
         .search-container {
             max-width: 600px;
@@ -195,6 +223,10 @@
                 <video id="mainVideo" controls></video>
             </div>
 
+            <div class="buffer-container">
+                <div class="buffer-bar" id="bufferBar"></div>
+            </div>
+            <div class="buffer-text" id="bufferText">تم التحميل: 0%</div>
             <div id="nowPlaying">اختر فيلماً للمشاهدة لتستمتع بوقتك</div>
         </section>
 
@@ -248,6 +280,11 @@
         const nowPlayingText = document.getElementById('nowPlaying');
         const moviesContainer = document.getElementById('moviesContainer');
         const searchInput = document.getElementById('searchInput');
+        
+        // متغيرات الـ Buffer
+        const bufferBar = document.getElementById('bufferBar');
+        const bufferText = document.getElementById('bufferText');
+        
         let hlsPlayer = new Hls();
 
         // 2. دالة توليد عناصر الأفلام في الصفحة (DOM Generation)
@@ -283,6 +320,10 @@
             nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // تصفير شريط التحميل عند تشغيل فيلم جديد (Reset Buffer UI)
+            bufferBar.style.width = '0%';
+            bufferText.innerText = 'تم التحميل: 0%';
+
             if (Hls.isSupported()) {
                 hlsPlayer.destroy(); 
                 hlsPlayer = new Hls();
@@ -305,6 +346,21 @@
                 movie.title.toLowerCase().includes(searchTerm)
             );
             renderMovies(filteredMovies);
+        });
+
+        // 5. حساب وعرض نسبة التحميل المسبق (Buffer Logic)
+        videoElement.addEventListener('progress', () => {
+            if (videoElement.buffered.length > 0) {
+                const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
+                const duration = videoElement.duration;
+                
+                if (duration > 0) {
+                    const percentage = (bufferedEnd / duration) * 100;
+                    bufferBar.style.width = `${percentage}%`;
+                    // نستخدم Math.floor لجعل النسبة المئوية رقماً صحيحاً بدون فواصل
+                    bufferText.innerText = `تم التحميل: ${Math.floor(percentage)}%`; 
+                }
+            }
         });
 
         // تشغيل دالة توليد الأفلام عند تحميل الصفحة
