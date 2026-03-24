@@ -10,7 +10,7 @@
     <style>
         /* المتغيرات الأساسية (CSS Variables) */
         :root {
-            --primary-color: #e50914;
+            --primary-color: #e50914; /* الأحمر */
             --bg-color: #0f0f0f;
             --card-bg: #1e1e1e;
             --text-color: #ffffff;
@@ -54,16 +54,19 @@
             text-align: center; 
         }
 
+        /* حاوية الفيديو الرئيسية */
         .video-wrapper {
             position: relative;
-            padding-top: 56.25%; /* نسبة العرض إلى الارتفاع 16:9 (Aspect Ratio) */
+            padding-top: 56.25%; /* نسبة العرض إلى الارتفاع 16:9 */
             background: #000;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(229, 9, 20, 0.1);
             border: 1px solid #333;
+            cursor: pointer;
         }
 
+        /* إخفاء أشرطة التحكم الافتراضية للمتصفح */
         video { 
             position: absolute;
             top: 0;
@@ -71,39 +74,88 @@
             width: 100%; 
             height: 100%;
         }
+        video::-webkit-media-controls {
+            display:none !important;
+        }
 
+        /* حاوية عناصر التحكم المخصصة فوق الفيديو (مثل YouTube) */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 10px;
+            box-sizing: border-box;
+            opacity: 1;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+
+        /* شريط التقدم المدمج بالكامل (مثل الصورة المرسلة) */
+        .progress-area {
+            height: 5px; /* الشريط نحيف افتراضياً */
+            width: 100%;
+            background: rgba(255,255,255,0.2); /* خلفية الشريط الداكنة */
+            cursor: pointer;
+            position: relative;
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+
+        /* تكبير الشريط عند التمرير عليه */
+        .progress-area:hover {
+            height: 8px;
+        }
+
+        /* طبقة الـ Buffer الرمادية (التحميل المسبق المدمج) */
+        .buffer-bar-integrated {
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4); /* رمادي فاتح شفاف مثل الصورة */
+            width: 0%; /* سيتغير برمجياً */
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 2px;
+        }
+
+        /* طبقة الوقت الحالي الحمراء */
+        .current-time-bar {
+            height: 100%;
+            background-color: var(--primary-color); /* الأحمر */
+            width: 0%; /* سيتغير برمجياً */
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 2px;
+            z-index: 2; /* فوق الـ Buffer */
+        }
+
+        /* النقطة الحمراء (المؤشر) */
+        .scrubber-dot {
+            height: 13px;
+            width: 13px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 0%; /* سيتغير برمجياً مع الوقت */
+            z-index: 3;
+            opacity: 0; /* مخفية افتراضياً */
+            transition: opacity 0.2s;
+        }
+
+        /* إظهار النقطة عند التمرير على الشريط */
+        .progress-area:hover .scrubber-dot {
+            opacity: 1;
+        }
+
+        /* اسم الفيلم أسفل المشغل */
         #nowPlaying { 
             margin-top: 15px; 
             color: #ccc; 
             font-size: 20px; 
-            font-weight: bold;
-        }
-
-        /* ------------------------------------- */
-        /* تصميم شريط التحميل المسبق (Buffer Bar CSS) */
-        /* ------------------------------------- */
-        .buffer-container {
-            width: 100%;
-            height: 6px;
-            background: #333;
-            border-radius: 4px;
-            margin-top: 15px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .buffer-bar {
-            height: 100%;
-            background: rgba(255, 255, 255, 0.6); /* لون رمادي فاتح شفاف */
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .buffer-text {
-            font-size: 14px;
-            color: #aaa;
-            margin-top: 8px;
-            text-align: right;
             font-weight: bold;
         }
 
@@ -219,14 +271,16 @@
 
     <main>
         <section class="player-container">
-            <div class="video-wrapper">
-                <video id="mainVideo" controls></video>
+            <div class="video-wrapper" id="videoWrapper">
+                <video id="mainVideo"></video> <div class="custom-controls">
+                    <div class="progress-area" id="progressArea">
+                        <div class="buffer-bar-integrated" id="bufferBarIntegrated"></div>
+                        <div class="current-time-bar" id="currentTimeBar"></div>
+                        <div class="scrubber-dot" id="scrubberDot"></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="buffer-container">
-                <div class="buffer-bar" id="bufferBar"></div>
-            </div>
-            <div class="buffer-text" id="bufferText">تم التحميل: 0%</div>
             <div id="nowPlaying">اختر فيلماً للمشاهدة لتستمتع بوقتك</div>
         </section>
 
@@ -280,10 +334,13 @@
         const nowPlayingText = document.getElementById('nowPlaying');
         const moviesContainer = document.getElementById('moviesContainer');
         const searchInput = document.getElementById('searchInput');
+        const videoWrapper = document.getElementById('videoWrapper');
         
-        // متغيرات الـ Buffer
-        const bufferBar = document.getElementById('bufferBar');
-        const bufferText = document.getElementById('bufferText');
+        // متغيرات عناصر التحكم المخصصة (Integrated Bars)
+        const progressArea = document.getElementById('progressArea');
+        const bufferBarIntegrated = document.getElementById('bufferBarIntegrated');
+        const currentTimeBar = document.getElementById('currentTimeBar');
+        const scrubberDot = document.getElementById('scrubberDot');
         
         let hlsPlayer = new Hls();
 
@@ -320,9 +377,10 @@
             nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // تصفير شريط التحميل عند تشغيل فيلم جديد (Reset Buffer UI)
-            bufferBar.style.width = '0%';
-            bufferText.innerText = 'تم التحميل: 0%';
+            // تصفير الأشرطة المدمجة عند تشغيل فيديو جديد
+            bufferBarIntegrated.style.width = '0%';
+            currentTimeBar.style.width = '0%';
+            scrubberDot.style.left = '0%';
 
             if (Hls.isSupported()) {
                 hlsPlayer.destroy(); 
@@ -348,19 +406,71 @@
             renderMovies(filteredMovies);
         });
 
-        // 5. حساب وعرض نسبة التحميل المسبق (Buffer Logic)
+        // ==========================================================
+        // 5. منطق عناصر التحكم المدمجة (Integrated Controls Logic)
+        // ==========================================================
+
+        // تحديث وقت التشغيل الحالي (البار الأحمر والنقطة)
+        videoElement.addEventListener('timeupdate', () => {
+            const currentTime = videoElement.currentTime;
+            const duration = videoElement.duration;
+            if (duration > 0) {
+                const percentage = (currentTime / duration) * 100;
+                currentTimeBar.style.width = `${percentage}%`;
+                scrubberDot.style.left = `${percentage}%`;
+            }
+        });
+
+        // تحديث التحميل المسبق المدمج (البار الرمادي الشفاف) - المطلوب الأساسي
         videoElement.addEventListener('progress', () => {
             if (videoElement.buffered.length > 0) {
-                const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
                 const duration = videoElement.duration;
+                // الحصول على نهاية آخر جزء تم تحميله (Furthest buffered end time)
+                const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
                 
                 if (duration > 0) {
                     const percentage = (bufferedEnd / duration) * 100;
-                    bufferBar.style.width = `${percentage}%`;
-                    // نستخدم Math.floor لجعل النسبة المئوية رقماً صحيحاً بدون فواصل
-                    bufferText.innerText = `تم التحميل: ${Math.floor(percentage)}%`; 
+                    bufferBarIntegrated.style.width = `${percentage}%`;
                 }
             }
+        });
+
+        // إضافة إمكانية التقديم والترجيع بالنقر على الشريط (Seeking)
+        progressArea.addEventListener('click', (e) => {
+            const areaWidth = progressArea.clientWidth; // عرض الشريط بالكامل
+            const clickX = e.offsetX; // مكان النقر بالنسبة للشريط
+            const duration = videoElement.duration;
+            
+            // حساب الوقت الجديد وتحديث الفيديو
+            videoElement.currentTime = (clickX / areaWidth) * duration;
+        });
+
+        // تشغيل وإيقاف الفيديو عند النقر عليه (Play/Pause on Click)
+        videoWrapper.addEventListener('click', (e) => {
+            // التأكد من أن النقر ليس على شريط التقدم
+            if (e.target !== progressArea && !progressArea.contains(e.target)) {
+                if (videoElement.paused) {
+                    videoElement.play();
+                } else {
+                    videoElement.pause();
+                }
+            }
+        });
+
+        // إخفاء عناصر التحكم عند توقف حركة الماوس (YouTube style)
+        let controlsTimeout;
+        const controls = document.querySelector('.custom-controls');
+        
+        videoWrapper.addEventListener('mousemove', () => {
+            controls.style.opacity = '1';
+            videoWrapper.style.cursor = 'default';
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (!videoElement.paused) {
+                    controls.style.opacity = '0';
+                    videoWrapper.style.cursor = 'none';
+                }
+            }, 3000); // إخفاء بعد 3 ثوانٍ
         });
 
         // تشغيل دالة توليد الأفلام عند تحميل الصفحة
