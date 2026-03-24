@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مكتبة أفلام أحمد الموحدة</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: white; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #e50914; } /* لون أحمر مثل نتفليكس */
+        
+        /* قسم المشغل في الأعلى */
+        .player-section { max-width: 800px; margin: 0 auto 30px; text-align: center; }
+        video { width: 100%; border: 2px solid #333; border-radius: 12px; background: black; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #nowPlaying { margin-top: 10px; color: #aaa; font-size: 18px; }
+
+        /* نظام الشبكة للأفلام (4 في كل سطر) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .movie-card {
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #333;
+        }
+        .movie-card:hover { transform: translateY(-5px); border-color: #e50914; }
+        .movie-card img { width: 100%; height: 250px; object-fit: cover; }
+        .movie-card h3 { padding: 10px; font-size: 14px; margin: 0; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h1>مكتبتي الخاصة</h1>
+
+    <div class="player-section">
+        <video id="mainVideo" controls></video>
+        <div id="nowPlaying">اختر فيلماً للمشاهدة</div>
+    </div>
+
+    <div class="grid-container">
+        
+        <div class="movie-card" onclick="playMovie('https://egyy34dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00087/55mcxx34bn9g_n/index-v1-a1.m3u8?t=UPLDVeiEePj3woIYI8V0zHPpQOGK5sYK1E-nQeZCpII&s=1774341689&e=43200&f=439553&i=0.0&sp=0', 'فيلم Frozen')">
+            <img src="https://via.placeholder.com/200x300?text=Tangled" alt="Tangled">
+            <h3>فيلم Frozen</h3>
+        </div>
+
+        <div class="movie-card" onclick="playMovie('https://egyy39nnndffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00088/wzpxx65kct26_h/index-v1-a1.m3u8?t=9DqKO83mghqxsCezKFuBEnRbCFxDjYlaFSJqB5gQPs0&s=1774342468&e=43200&f=443881&i=0.0&sp=0', 'فيلم Smurfs 3 The Lost Village 2017 ')">
+            <img src="https://via.placeholder.com/200x300?text=Movie+2" alt="Movie 2">
+            <h3>فيلم Smurfs 3 The Lost Village 2017 </h3>
+        </div>
+
+        <div class="movie-card" onclick="playMovie('https://egy46dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00113/q0q2tgeordcf_h/index-v1-a1.m3u8?t=KQNoHAEOdO8T6Mf4PomMH7p_zmfX1odhUwuyHfYZiOk&s=1774342506&e=43200&f=568419&i=0.0&sp=0',
+         'فيلم How to Train Your Dragon 1 2010   ')">
+            <img src="https://via.placeholder.com/200x300?text=Movie+3" alt="Movie 3">
+            <h3>  فيلم How to Train Your Dragon 1 2010 </h3>
+        </div>
+
+        <div class="movie-card" onclick="playMovie('رابط_الفيلم_4_هنا', 'اسم الفيلم 4')">
+            <img src="https://via.placeholder.com/200x300?text=Movie+4" alt="Movie 4">
+            <h3>اسم الفيلم 4</h3>
+        </div>
+
+        </div>
+
+    <script>
+        var video = document.getElementById('mainVideo');
+        var hls = new Hls();
+
+        function playMovie(url, title) {
+            document.getElementById('nowPlaying').innerText = "أنت تشاهد الآن: " + title;
+            
+            // التمرير للأعلى تلقائياً عند الضغط على فيلم
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (Hls.isSupported()) {
+                hls.destroy(); // تنظيف الفيديو السابق
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.play();
+            }
+        }
+    </script>
+
+</body>
+</html>
