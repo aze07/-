@@ -285,24 +285,37 @@
         }
 
         // 3. دالة تشغيل الفيلم (Playback Function)
-        function playMovie(url, title) {
-            nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // أضفنا متغير isInitialLoad لتجنب التمرير التلقائي عند فتح الموقع لأول مرة
+function playMovie(url, title, isInitialLoad = false) {
+    nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
+    
+    // تمرير الشاشة للأعلى فقط إذا لم يكن هذا التحميل الأول للصفحة
+    if (!isInitialLoad) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-            if (Hls.isSupported()) {
-                hlsPlayer.destroy(); 
-                hlsPlayer = new Hls();
-                hlsPlayer.loadSource(url);
-                hlsPlayer.attachMedia(videoElement);
-                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function() {
-                    videoElement.play();
-                });
-            } 
-            else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                videoElement.src = url;
-                videoElement.play();
-            }
+    // 1. حفظ بيانات الفيلم في التخزين المحلي (Local Storage)
+    const movieData = { url: url, title: title };
+    localStorage.setItem('lastWatchedMovie', JSON.stringify(movieData));
+
+    if (Hls.isSupported()) {
+        if (hlsPlayer) {
+            hlsPlayer.destroy(); 
         }
+        
+        hlsPlayer = new Hls({ autoStartLoad: false });
+        hlsPlayer.loadSource(url);
+        hlsPlayer.attachMedia(videoElement);
+        
+        videoElement.addEventListener('play', () => {
+            hlsPlayer.startLoad();
+        }, { once: true });
+
+    } 
+    else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoElement.src = url;
+    }
+}
 
         // 4. نظام البحث (Search Functionality)
         searchInput.addEventListener('input', (event) => {
@@ -314,7 +327,19 @@
         });
 
         // تشغيل دالة توليد الأفلام عند تحميل الصفحة
-        renderMovies();
+       
+renderMovies();
+
+// 2. التحقق من وجود فيلم محفوظ مسبقاً في (Local Storage)
+const savedMovieData = localStorage.getItem('lastWatchedMovie');
+
+if (savedMovieData) {
+    // تحويل البيانات النصية إلى كائن (Object) باستخدام JSON.parse
+    const parsedMovie = JSON.parse(savedMovieData);
+    
+    // استدعاء دالة التشغيل مع تمرير true لمنع الـ Scroll التلقائي
+    playMovie(parsedMovie.url, parsedMovie.title, true);
+}
 
     </script>
 </body>
