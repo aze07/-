@@ -185,6 +185,7 @@
 
     <script>
         // 1. مصفوفة البيانات (Data Array): ضع كل أفلامك هنا لتنظيم الكود
+                // 1. مصفوفة البيانات (Data Array) كاملة لجميع الأفلام
         const moviesData = [
             {
                 title: "فيلم Frozen",
@@ -210,7 +211,124 @@
                 title: "فيلم Ice Age 5 Collision Course 2016",
                 image: "5.jpg",
                 url: "https://eg45g2dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00087/zh2rm4ehwf97_h/index-v1-a1.m3u8?t=DV4oZi-PyOJr0MlJ6hTpouNOAwhFbKk96xMf6QdSuU4&s=1774349748&e=43200&f=439408&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Madagascar: Escape 2 Africa 2008 مترجم",
+                image: "6.jpg",
+                url: "https://egy41ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00113/2pzdk2bw3frk_h/index-v1-a1.m3u8?t=0Sw7R6ELboyPS9N5cicLvrFWxW-sojdEs4wnvFxa8cc&s=1774350147&e=43200&f=568117&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Madagascar 3 Europe's Most Wanted 2012 مترجم",
+                image: "7.jpg",
+                url: "https://egy40ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00113/jqg828dbxbaq_h/index-v1-a1.m3u8?t=abDDRZgvvsQE4WADe3VUoZRBBrft7mssmSTN82YPUkI&s=1774350400&e=43200&f=568124&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Monsters University 2 2013 مدبلج مصري",
+                image: "8.jpg",
+                url: "https://egy44ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00087/h698vk49v2k7_h/index-v1-a1.m3u8?t=sD1YG4rtKmE8qA6qihULhGRobmSI5KZM1qnfMHoh9uk&s=1774350722&e=43200&f=439737&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Finding Nemo 2003 مدبلج مصري",
+                image: "9.jpg",
+                url: "https://egy46dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00087/oani8gdplt47_h/index-v1-a1.m3u8?t=yxO3kZQrbUnrhU58neKq7BP2U9psMtB4ClxfbI0boAQ&s=1774350849&e=43200&f=439744&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Finding Dory 2016 مدبلج مصري",
+                image: "10.jpg",
+                url: "https://egy29ddddffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00091/den2a37t2l7r_h/index-v1-a1.m3u8?t=U9Xt5xkBwaz2r9ooDKbjDO5cFxlcbW1NRRnISGNuVGw&s=1774352196&e=43200&f=455627&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Ratatouille 2007 الفار الطباخ مدبلج HD",
+                image: "11.jpg",
+                url: "https://egyy36dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00094/57hfxkndoczg_h/index-v1-a1.m3u8?t=jkBHpbze2zEQ4AonWB6-xuKjLLAbdK5wM_lEdAJNiMI&s=1774351561&e=43200&f=560942&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Minions 2015 مترجم",
+                image: "12.jpg",
+                url: "https://egyy34dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00089/3356qufayjfd_h/index-v1-a1.m3u8?t=xp15sFHcciqmIJ9LQUUVgNtc98DStBarxXNbHYhjwWc&s=1774351795&e=43200&f=446834&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم The Good Dinosaur 2015 مترجم",
+                image: "13.jpg",
+                url: "https://egy45ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00089/p73g1gxzf7cg_h/index-v1-a1.m3u8?t=CnKH7K1Prcs7cHTxyBqZnJ-jcsUUqVLxFEjI2zo1eiU&s=1774351893&e=43200&f=446837&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Storks 2016 مترجم",
+                image: "14.jpg",
+                url: "https://egy38ssdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00087/bv9ng986m1b3_h/index-v1-a1.m3u8?t=Okz-4xRcykPJKRYoPbpc2m94QV4KFexp8EZosVW_gNg&s=1774352030&e=43200&f=439624&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم The Lion King 1994 مترجم",
+                image: "15.jpg",
+                url: "https://amd-cdn-1.ffb7df5a878b59e42e257c042f54bed2.com/content/stream/agl/15_melbet_arabo_16_9_meljo.mp4"
+            },
+            {
+                title: "فيلم Moana 2016 مدبلج مصري",
+                image: "16.jpg",
+                url: "https://egy44ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00096/6pt5xemp2ez7_h/index-v1-a1.m3u8?t=31YLB6IPHTnucnFmIneGCOjseRo-wR_fLBUj7XmCbH0&s=1774352346&e=43200&f=483123&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم A Bug's Life 1998 مدبلج مصري",
+                image: "17.jpg",
+                url: "https://eg45g2dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00098/5emh8swe43yz_h/index-v1-a1.m3u8?t=Vzj9aYA19A6oeiW3aaQwFYFCaSU4CajR3SsR0vHhP-Y&s=1774352443&e=43200&f=491709&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Over the Hedge 2006 مترجم",
+                image: "18.jpg",
+                url: "https://vroba-store1-lgk.cdnz.quest/hls2/04/00024/juesn7b4x9vx_n/index-v1-a1.m3u8?t=QhpJ5W_1DDFmp1PMM5sdFXtykaKDtfi3hKoheOtcXNk&s=1774352559&e=43200&v=125805&i=0.3&sp=0"
+            },
+            {
+                title: "فيلم Zootopia 2016 مدبلج مصري",
+                image: "19.jpg",
+                url: "https://egy45dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00097/9ra6nwwiabs0_h/index-v1-a1.m3u8?t=1KhEvE5rmHe9OWOV0cNEoYtyfoThU-qx6HzUeZCLx_c&s=1774352698&e=43200&f=486555&i=0.0&sp=0"
+            },
+            {
+                title: "Migration",
+                image: "20.jpg",
+                url: "https://egy42ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00096/ja66uilgigvy_h/index-v1-a1.m3u8?t=eIlUzRmpuCx7OGJNhd-NEm7bfc2Ql_4tf1Tn9FcWNMA&s=1774353350&e=43200&f=482798&i=0.0&sp=0"
+            },
+            {
+                title: "The Croods 2013",
+                image: "21.jpg",
+                url: "https://n6w.1vid.online/hls2/01/00014/fea1ih88h4g3_n/index-v1-a1.m3u8?t=x7cZwI2P3A9w0yY7HhkogbZuV9yp4s7aMjHUEmA3Nlw&s=1774354098&e=7200&f=73806&i=105.105&sp=2048"
+            },
+            {
+                title: "The Croods 2020",
+                image: "22.jpg",
+                url: "https://v9x.1vid.online/hls2/02/00014/hfxp5cetuwyf_n/index-v1-a1.m3u8?t=nbsYzjTNeKOGScfhpUWNWkuJ0PX5il3Dktt4e0f6JJs&s=1774354969&e=7200&f=73815&i=105.105&sp=2048"
+            },
+            {
+                title: "Wall-E 2008",
+                image: "23.jpg",
+                url: "https://m100.uqload.is/3rfkm7w3nbw2q4drdkqpbnxwa46jk66ono57kmkzsgyfv7r5qjl3zmdtcoza/v.mp4"
+            },
+            {
+                title: "فيلم Onward 2020 مدبلج مصري",
+                image: "24.jpg",
+                url: "https://egy45dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00096/cg7l8r8tohsa_h/index-v1-a1.m3u8?t=r2E_YjKDlP9bASqtsRxUK0YFsXuLU6pueZWXoqRa55w&s=1774355807&e=43200&f=482562&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم The Wild Robot 2024 مدبلج مصري",
+                image: "25.jpg",
+                url: "https://egy43ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00108/mn0iki7rzpap_h/index-v1-a1.m3u8?t=9JtCcHKHMjeCjTs3FhSwLQELlpL6ITYvMEktQECrlmk&s=1774356015&e=43200&f=542008&i=0.0&sp=0"
+            },
+            {
+                title: "فيلم Luca 2021 مدبلج مصري",
+                image: "26.jpg",
+                url: "https://egyy36dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00096/5wo7foi6dj5w_h/index-v1-a1.m3u8?t=jzUdXTZGHPflNedSGODgWmKPjgB5zSJjMBS7cqXlhXg&s=1774356165&e=43200&f=483125&i=0.0&sp=0"
+            },
+            {
+                title: "Soul 2020",
+                image: "27.jpg",
+                url: "https://egy43ssxdffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00097/s9ib03phwck3_h/index-v1-a1.m3u8?t=bnsbRt1ILibweNHWuge1ZnCQtWzpw1nU5fJJT32yq4Y&s=1774356396&e=43200&f=486595&i=0.0&sp=0"
+            },
+            {
+                title: "Raya",
+                image: "28.jpg",
+                url: "https://v9x.1vid.online/hls2/01/00014/0dphkllrziz6_n/index-v1-a1.m3u8?t=gLoO25sIVn4i__FwntILLq2WyPccCyD0lIvjfDzItR0&s=1774356563&e=7200&f=74056&i=105.105&sp=2048"
             }
+        ];
+
             // يمكنك إضافة باقي الأفلام هنا بنفس الطريقة تماماً (نسخ ولصق الكتلة السابقة وتغيير الرابط والصورة)
         ];
 
