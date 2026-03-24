@@ -7,43 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-
-    
-    <style>
-        .video-container {
-            position: relative;
-            width: 600px;
-        }
-        
-        .progress-bar-container {
-            width: 100%;
-            height: 8px;
-            background-color: #333; 
-            position: absolute;
-            bottom: 5px;
-            cursor: pointer;
-        }
-
-        .buffer-bar {
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.4); 
-            width: 0%; 
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    </style>
-
-
-    
-
-
-
-
-
-
-
-    
     <style>
         /* المتغيرات الأساسية (CSS Variables) */
         :root {
@@ -114,31 +77,6 @@
             color: #ccc; 
             font-size: 20px; 
             font-weight: bold;
-        }
-
-        /* شريط التحميل (Buffer Progress Bar) */
-        .buffer-container {
-            width: 100%;
-            height: 8px;
-            background: #333;
-            border-radius: 4px;
-            margin-top: 15px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .buffer-bar {
-            height: 100%;
-            background: #555;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .buffer-text {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 5px;
-            text-align: right;
         }
 
         /* شريط البحث (Search Bar) */
@@ -247,35 +185,6 @@
 </head>
 <body>
 
-<div class="video-container">
-        <video id="myVideo" width="100%" controls>
-            <source src="your-video.mp4" type="video/mp4">
-        </video>
-        
-        <div class="progress-bar-container">
-            <div id="bufferBar" class="buffer-bar"></div>
-        </div>
-    </div>
-
-    <script>
-        const video = document.getElementById('myVideo');
-        const bufferBar = document.getElementById('bufferBar');
-
-        video.addEventListener('progress', function() {
-            if (video.buffered.length > 0) {
-                const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-                const duration = video.duration;
-
-                if (duration > 0) {
-                    const bufferPercentage = (bufferedEnd / duration) * 100;
-                    bufferBar.style.width = bufferPercentage + '%';
-                }
-            }
-        });
-    </script>
-    
-
-    
     <header>
         <h1>Disney for RAOUIA</h1>
     </header>
@@ -285,11 +194,6 @@
             <div class="video-wrapper">
                 <video id="mainVideo" controls></video>
             </div>
-            
-            <div class="buffer-container">
-                <div class="buffer-bar" id="bufferBar"></div>
-            </div>
-            <div class="buffer-text" id="bufferText">تم التحميل: 0%</div>
 
             <div id="nowPlaying">اختر فيلماً للمشاهدة لتستمتع بوقتك</div>
         </section>
@@ -344,14 +248,11 @@
         const nowPlayingText = document.getElementById('nowPlaying');
         const moviesContainer = document.getElementById('moviesContainer');
         const searchInput = document.getElementById('searchInput');
-        const bufferBar = document.getElementById('bufferBar');
-        const bufferText = document.getElementById('bufferText');
         let hlsPlayer = new Hls();
 
         // 2. دالة توليد عناصر الأفلام في الصفحة (DOM Generation)
-        // تم التعديل لتقبل مصفوفة محددة (مفيدة للبحث)
         function renderMovies(moviesList = moviesData) {
-            moviesContainer.innerHTML = ''; // مسح المحتوى الحالي قبل إعادة الرسم
+            moviesContainer.innerHTML = ''; 
             
             if (moviesList.length === 0) {
                 moviesContainer.innerHTML = '<p style="text-align: center; width: 100%; color: #ccc;">عذراً، لم يتم العثور على أفلام مطابقة لبحثك.</p>';
@@ -382,10 +283,6 @@
             nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // إعادة ضبط شريط التحميل عند تشغيل فيديو جديد
-            bufferBar.style.width = '0%';
-            bufferText.innerText = 'تم التحميل: 0%';
-
             if (Hls.isSupported()) {
                 hlsPlayer.destroy(); 
                 hlsPlayer = new Hls();
@@ -408,21 +305,6 @@
                 movie.title.toLowerCase().includes(searchTerm)
             );
             renderMovies(filteredMovies);
-        });
-
-        // 5. حساب نسبة التحميل (Buffering Progress Logic)
-        videoElement.addEventListener('progress', () => {
-            if (videoElement.buffered.length > 0) {
-                // الحصول على نهاية آخر جزء تم تحميله
-                const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
-                const duration = videoElement.duration;
-                
-                if (duration > 0) {
-                    const percentage = (bufferedEnd / duration) * 100;
-                    bufferBar.style.width = `${percentage}%`;
-                    bufferText.innerText = `تم التحميل: ${Math.round(percentage)}%`;
-                }
-            }
         });
 
         // تشغيل دالة توليد الأفلام عند تحميل الصفحة
