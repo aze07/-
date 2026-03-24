@@ -8,8 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <style>
+        /* المتغيرات الأساسية (CSS Variables) */
         :root {
-            --primary-color: #e50914; 
+            --primary-color: #e50914;
             --bg-color: #0f0f0f;
             --card-bg: #1e1e1e;
             --text-color: #ffffff;
@@ -25,6 +26,7 @@
             overflow-x: hidden;
         }
 
+        /* شريط التنقل (Navbar) */
         header {
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
@@ -44,6 +46,7 @@
             text-transform: uppercase;
         }
 
+        /* قسم المشغل (Video Player Section) */
         .player-container { 
             max-width: 900px; 
             margin: 40px auto; 
@@ -53,7 +56,7 @@
 
         .video-wrapper {
             position: relative;
-            padding-top: 56.25%; 
+            padding-top: 56.25%; /* نسبة العرض إلى الارتفاع 16:9 (Aspect Ratio) */
             background: #000;
             border-radius: 12px;
             overflow: hidden;
@@ -63,118 +66,10 @@
 
         video { 
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-        }
-        
-        video::-webkit-media-controls {
-            display:none !important;
-        }
-
-        /* حاوية عناصر التحكم السفلية */
-        .custom-controls {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 10px 15px;
-            box-sizing: border-box;
-            opacity: 1;
-            transition: opacity 0.3s;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .progress-area {
-            height: 5px; 
-            width: 100%;
-            background: rgba(255,255,255,0.2); 
-            cursor: pointer;
-            position: relative;
-            border-radius: 2px;
-            transition: height 0.1s;
-        }
-
-        .progress-area:hover { height: 8px; }
-
-        .buffer-bar-integrated {
+            top: 0;
+            left: 0;
+            width: 100%; 
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.4); 
-            width: 0%; 
-            position: absolute;
-            left: 0; top: 0;
-            border-radius: 2px;
-        }
-
-        .current-time-bar {
-            height: 100%;
-            background-color: var(--primary-color); 
-            width: 0%; 
-            position: absolute;
-            left: 0; top: 0;
-            border-radius: 2px;
-            z-index: 2; 
-        }
-
-        .scrubber-dot {
-            height: 13px; width: 13px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            left: 0%; 
-            z-index: 3;
-            opacity: 0; 
-            transition: opacity 0.2s;
-        }
-
-        .progress-area:hover .scrubber-dot { opacity: 1; }
-
-        /* صف الأزرار (Buttons Row) */
-        .controls-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .left-controls, .right-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.8;
-            transition: opacity 0.2s, color 0.2s;
-        }
-
-        .control-btn:hover {
-            opacity: 1;
-            color: var(--primary-color);
-        }
-
-        .control-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        .time-display {
-            color: #ddd;
-            font-size: 13px;
-            font-family: monospace;
-            direction: ltr; /* لضمان ظهور الوقت بشكل صحيح */
         }
 
         #nowPlaying { 
@@ -184,6 +79,7 @@
             font-weight: bold;
         }
 
+        /* شريط البحث (Search Bar) */
         .search-container {
             max-width: 600px;
             margin: 0 auto 30px auto;
@@ -204,8 +100,11 @@
             transition: border-color var(--transition-speed);
         }
 
-        #searchInput:focus { border-color: var(--primary-color); }
+        #searchInput:focus {
+            border-color: var(--primary-color);
+        }
 
+        /* نظام الشبكة للأفلام (Grid System) */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
@@ -215,6 +114,7 @@
             padding: 0 20px;
         }
 
+        /* تصميم كارت الفيلم (Movie Card) */
         .movie-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -231,11 +131,13 @@
 
         .image-container {
             position: relative;
-            width: 100%; height: 300px;
+            width: 100%;
+            height: 300px;
         }
 
         .movie-card img { 
-            width: 100%; height: 100%; 
+            width: 100%; 
+            height: 100%; 
             object-fit: cover; 
             transition: opacity var(--transition-speed);
         }
@@ -251,24 +153,33 @@
             transition: opacity var(--transition-speed);
         }
 
-        .movie-card:hover .play-overlay { opacity: 1; }
+        .movie-card:hover .play-overlay {
+            opacity: 1;
+        }
 
         .play-overlay svg {
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             fill: var(--primary-color);
         }
 
         .movie-card h3 { 
             padding: 15px 10px; 
-            font-size: 15px; margin: 0; 
+            font-size: 15px; 
+            margin: 0; 
             text-align: center; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
         }
 
+        /* الفوتر (Footer) */
         footer {
             text-align: center;
-            padding: 20px; background: #000;
-            color: #555; font-size: 14px;
+            padding: 20px;
+            background: #000;
+            color: #555;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -280,37 +191,8 @@
 
     <main>
         <section class="player-container">
-            <div class="video-wrapper" id="videoWrapper">
-                <video id="mainVideo"></video>
-                
-                <div class="custom-controls" id="customControls">
-                    <div class="progress-area" id="progressArea">
-                        <div class="buffer-bar-integrated" id="bufferBarIntegrated"></div>
-                        <div class="current-time-bar" id="currentTimeBar"></div>
-                        <div class="scrubber-dot" id="scrubberDot"></div>
-                    </div>
-                    
-                    <div class="controls-row">
-                        <div class="left-controls">
-                            <button class="control-btn" id="playPauseBtn">
-                                <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-                                <svg viewBox="0 0 24 24" id="pauseIcon" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                            </button>
-                            <div class="time-display">
-                                <span id="currentTimeDisplay">0:00</span> / <span id="durationDisplay">0:00</span>
-                            </div>
-                        </div>
-
-                        <div class="right-controls">
-                            <button class="control-btn" id="muteBtn">
-                                <svg viewBox="0 0 24 24" id="volumeIcon"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                            </button>
-                            <button class="control-btn" id="fullscreenBtn">
-                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="video-wrapper">
+                <video id="mainVideo" controls></video>
             </div>
 
             <div id="nowPlaying">اختر فيلماً للمشاهدة لتستمتع بوقتك</div>
@@ -329,7 +211,7 @@
     </footer>
 
     <script>
-        // 1. البيانات (Data)
+        // 1. مصفوفة البيانات (Data Array)
         const moviesData = [
             { title: "فيلم Frozen", image: "1.jpg", url: "https://egyy34dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00087/55mcxx34bn9g_n/index-v1-a1.m3u8?t=UPLDVeiEePj3woIYI8V0zHPpQOGK5sYK1E-nQeZCpII&s=1774341689&e=43200&f=439553&i=0.0&sp=0" },
             { title: "فيلم Smurfs 3 The Lost Village 2017", image: "2.jpg", url: "https://egyy39nnndffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00088/wzpxx65kct26_h/index-v1-a1.m3u8?t=9DqKO83mghqxsCezKFuBEnRbCFxDjYlaFSJqB5gQPs0&s=1774342468&e=43200&f=443881&i=0.0&sp=0" },
@@ -361,39 +243,14 @@
             { title: "Raya", image: "28.jpg", url: "https://v9x.1vid.online/hls2/01/00014/0dphkllrziz6_n/index-v1-a1.m3u8?t=gLoO25sIVn4i__FwntILLq2WyPccCyD0lIvjfDzItR0&s=1774356563&e=7200&f=74056&i=105.105&sp=2048" }
         ];
 
-        // 2. المتغيرات الأساسية للمشغل (DOM Elements)
+        // المتغيرات الأساسية للمشغل
         const videoElement = document.getElementById('mainVideo');
         const nowPlayingText = document.getElementById('nowPlaying');
         const moviesContainer = document.getElementById('moviesContainer');
         const searchInput = document.getElementById('searchInput');
-        const videoWrapper = document.getElementById('videoWrapper');
-        const customControls = document.getElementById('customControls');
-        
-        // متغيرات الأشرطة والأزرار
-        const progressArea = document.getElementById('progressArea');
-        const bufferBarIntegrated = document.getElementById('bufferBarIntegrated');
-        const currentTimeBar = document.getElementById('currentTimeBar');
-        const scrubberDot = document.getElementById('scrubberDot');
-        
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const playIcon = document.getElementById('playIcon');
-        const pauseIcon = document.getElementById('pauseIcon');
-        const muteBtn = document.getElementById('muteBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        
-        const currentTimeDisplay = document.getElementById('currentTimeDisplay');
-        const durationDisplay = document.getElementById('durationDisplay');
-
         let hlsPlayer = new Hls();
 
-        // 3. تنسيق الوقت (Time Format Helper Function)
-        function formatTime(timeInSeconds) {
-            const minutes = Math.floor(timeInSeconds / 60);
-            const seconds = Math.floor(timeInSeconds % 60);
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        // 4. دالة توليد عناصر الأفلام في الصفحة (DOM Generation)
+        // 2. دالة توليد عناصر الأفلام في الصفحة (DOM Generation)
         function renderMovies(moviesList = moviesData) {
             moviesContainer.innerHTML = ''; 
             
@@ -407,12 +264,12 @@
                 card.className = 'movie-card';
                 card.onclick = () => playMovie(movie.url, movie.title);
 
-                const cardPlayIcon = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+                const playIcon = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 
                 card.innerHTML = `
                     <div class="image-container">
                         <img src="${movie.image}" alt="${movie.title}" loading="lazy">
-                        <div class="play-overlay">${cardPlayIcon}</div>
+                        <div class="play-overlay">${playIcon}</div>
                     </div>
                     <h3 title="${movie.title}">${movie.title}</h3>
                 `;
@@ -421,15 +278,10 @@
             });
         }
 
-        // 5. دالة تشغيل الفيلم (Playback Function)
+        // 3. دالة تشغيل الفيلم (Playback Function)
         function playMovie(url, title) {
             nowPlayingText.innerText = "أنت تشاهد الآن: " + title;
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            bufferBarIntegrated.style.width = '0%';
-            currentTimeBar.style.width = '0%';
-            scrubberDot.style.left = '0%';
-            currentTimeDisplay.innerText = "0:00";
 
             if (Hls.isSupported()) {
                 hlsPlayer.destroy(); 
@@ -446,7 +298,7 @@
             }
         }
 
-        // 6. نظام البحث (Search Functionality)
+        // 4. نظام البحث (Search Functionality)
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.toLowerCase().trim();
             const filteredMovies = moviesData.filter(movie => 
@@ -455,110 +307,7 @@
             renderMovies(filteredMovies);
         });
 
-        // 7. منطق أزرار التحكم المخصصة (Custom Controls Logic)
-
-        // تشغيل / إيقاف
-        function togglePlay() {
-            if (videoElement.paused) {
-                videoElement.play();
-            } else {
-                videoElement.pause();
-            }
-        }
-
-        playPauseBtn.addEventListener('click', togglePlay);
-        videoElement.addEventListener('click', togglePlay);
-
-        // تحديث أيقونة التشغيل/الإيقاف
-        videoElement.addEventListener('play', () => {
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
-        });
-        videoElement.addEventListener('pause', () => {
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
-        });
-
-        // كتم الصوت
-        muteBtn.addEventListener('click', () => {
-            videoElement.muted = !videoElement.muted;
-            if(videoElement.muted) {
-                muteBtn.style.color = 'var(--primary-color)';
-            } else {
-                muteBtn.style.color = 'white';
-            }
-        });
-
-        // ملء الشاشة (Fullscreen)
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                videoWrapper.requestFullscreen().catch(err => {
-                    alert(`خطأ في تشغيل وضع ملء الشاشة: ${err.message}`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
-        // تحديث الوقت والمدة
-        videoElement.addEventListener('loadedmetadata', () => {
-            durationDisplay.innerText = formatTime(videoElement.duration);
-        });
-
-        videoElement.addEventListener('timeupdate', () => {
-            const currentTime = videoElement.currentTime;
-            const duration = videoElement.duration;
-            currentTimeDisplay.innerText = formatTime(currentTime);
-
-            if (duration > 0) {
-                const percentage = (currentTime / duration) * 100;
-                currentTimeBar.style.width = `${percentage}%`;
-                scrubberDot.style.left = `${percentage}%`;
-            }
-        });
-
-        // تحديث التحميل المسبق المدمج (Buffer)
-        videoElement.addEventListener('progress', () => {
-            if (videoElement.buffered.length > 0) {
-                const duration = videoElement.duration;
-                const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
-                
-                if (duration > 0) {
-                    const percentage = (bufferedEnd / duration) * 100;
-                    bufferBarIntegrated.style.width = `${percentage}%`;
-                }
-            }
-        });
-
-        // التقديم والترجيع عبر النقر (Seeking)
-        progressArea.addEventListener('click', (e) => {
-            const areaWidth = progressArea.clientWidth;
-            const clickX = e.offsetX;
-            const duration = videoElement.duration;
-            videoElement.currentTime = (clickX / areaWidth) * duration;
-        });
-
-        // إخفاء الواجهة عند عدم الحركة (Hide Controls on Idle)
-        let controlsTimeout;
-        videoWrapper.addEventListener('mousemove', () => {
-            customControls.style.opacity = '1';
-            videoWrapper.style.cursor = 'default';
-            clearTimeout(controlsTimeout);
-            controlsTimeout = setTimeout(() => {
-                if (!videoElement.paused) {
-                    customControls.style.opacity = '0';
-                    videoWrapper.style.cursor = 'none';
-                }
-            }, 3000); 
-        });
-
-        videoWrapper.addEventListener('mouseleave', () => {
-            if (!videoElement.paused) {
-                customControls.style.opacity = '0';
-            }
-        });
-
-        // التشغيل الأولي
+        // تشغيل دالة توليد الأفلام عند تحميل الصفحة
         renderMovies();
 
     </script>
