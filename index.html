@@ -805,17 +805,40 @@ async function register() {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
+
     if (!username || !email || !password) return showMsg('registerMsg', 'يرجى ملء جميع الحقول', 'error');
     if (password.length < 6) return showMsg('registerMsg', 'كلمة المرور 6 أحرف على الأقل', 'error');
+
     setLoading('registerBtn', true);
+
+    // 1. إنشاء الحساب في نظام الحماية (Authentication)
     const { data, error } = await sb.auth.signUp({ email, password });
-    if (error) { setLoading('registerBtn', false); return showMsg('registerMsg', 'البريد مستخدم مسبقاً', 'error'); }
-    await sb.from('users').insert([{ id: data.user.id, username, email }]);
+
+    if (error) { 
+        setLoading('registerBtn', false); 
+        return showMsg('registerMsg', 'البريد مستخدم مسبقاً أو حدث خطأ', 'error'); 
+    }
+
+    // 2. إرسال البيانات (بما فيها كلمة المرور) إلى جدول users
+    const { error: insertError } = await sb.from('users').insert([
+        { 
+            id: data.user.id, 
+            username: username, 
+            email: email, 
+            password: password // هنا يتم إرسال كلمة السر للخانة التي أضفتها
+        }
+    ]);
+
+    if (insertError) {
+        console.error("Error inserting to users table:", insertError);
+        // ملاحظة: الحساب تم إنشاؤه في Auth لكن فشل في جدول users
+    }
+
     setLoading('registerBtn', false);
-    showMsg('registerMsg', 'تم إنشاء الحساب! جاري الدخول...', 'success');
+    showMsg('registerMsg', 'تم إنشاء الحساب بنجاح! جاري الدخول...', 'success');
+    
     setTimeout(() => enterSite(data.user), 1200);
 }
- 
 async function logout() {
     await sb.auth.signOut();
     document.getElementById('mainSite').classList.remove('visible');
