@@ -1,273 +1,18 @@
+Index · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مكتبة راوية | RAOUIA Movies</title>
-     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --border: #1e1e2e;
-      --gold: #c9a84c;
-      --gold-light: #e2c47a;
-      --gold-dim: rgba(201,168,76,0.12);
-      --text: #f0ece0;
-      --text-dim: #7a7568;
-      --red: #e05555;
-      --green: #4caf82;
-    }
- 
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
- 
-    /* خلفية متحركة */
-    .bg-orbs {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.15;
-      animation: float 8s ease-in-out infinite;
-    }
-    .orb-1 { width: 400px; height: 400px; background: var(--gold); top: -100px; right: -100px; animation-delay: 0s; }
-    .orb-2 { width: 300px; height: 300px; background: #6a4fc8; bottom: -80px; left: -80px; animation-delay: 3s; }
-    .orb-3 { width: 200px; height: 200px; background: var(--gold-light); top: 50%; left: 30%; animation-delay: 5s; }
- 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-30px) scale(1.05); }
-    }
- 
-    /* البطاقة */
-    .card {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 420px;
-      padding: 2.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.08);
-      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
- 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
- 
-    /* الشعار */
-    .logo {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .logo-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      margin-bottom: 0.75rem;
-      box-shadow: 0 8px 24px rgba(201,168,76,0.3);
-    }
-    .logo-title {
-      font-size: 1.5rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 2px;
-    }
-    .logo-sub {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-      letter-spacing: 1px;
-    }
- 
-    /* التبويبات */
-    .tabs {
-      display: flex;
-      background: var(--bg);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border);
-    }
-    .tab {
-      flex: 1;
-      padding: 0.65rem;
-      text-align: center;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: transparent;
-      color: var(--text-dim);
-    }
-    .tab.active {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: #0a0a0f;
-      box-shadow: 0 4px 14px rgba(201,168,76,0.35);
-    }
- 
-    /* الفورم */
-    .form { display: none; flex-direction: column; gap: 1rem; }
-    .form.active { display: flex; animation: fadeIn 0.3s ease; }
- 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
- 
-    .field { display: flex; flex-direction: column; gap: 0.4rem; }
-    .field label { font-size: 0.85rem; color: var(--text-dim); font-weight: 500; }
- 
-    .field input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
-      color: var(--text);
-      font-family: 'Tajawal', sans-serif;
-      font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      width: 100%;
-    }
-    .field input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-    }
-    .field input::placeholder { color: var(--text-dim); }
- 
-    /* زر الإرسال */
-    .btn-submit {
-      margin-top: 0.5rem;
-      padding: 0.9rem;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      color: #0a0a0f;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
-    .btn-submit:active { transform: translateY(0); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
- 
-    .btn-submit .spinner {
-      display: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(0,0,0,0.3);
-      border-top-color: #0a0a0f;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto;
-    }
-    .btn-submit.loading .btn-text { display: none; }
-    .btn-submit.loading .spinner { display: block; }
- 
-    @keyframes spin { to { transform: rotate(360deg); } }
- 
-    /* رسائل */
-    .message {
-      padding: 0.8rem 1rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      display: none;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .message.show { display: flex; animation: fadeIn 0.3s ease; }
-    .message.error { background: rgba(224,85,85,0.1); border: 1px solid rgba(224,85,85,0.3); color: var(--red); }
-    .message.success { background: rgba(76,175,130,0.1); border: 1px solid rgba(76,175,130,0.3); color: var(--green); }
- 
-    /* بعد تسجيل الدخول */
-    .user-panel {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.2rem;
-      text-align: center;
-      animation: fadeIn 0.4s ease;
-    }
-    .user-panel.show { display: flex; }
-    .user-avatar {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-    }
-    .user-name { font-size: 1.3rem; font-weight: 700; }
-    .user-email { font-size: 0.85rem; color: var(--text-dim); }
-    .btn-logout {
-      padding: 0.7rem 2rem;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      border-radius: 10px;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-logout:hover { border-color: var(--red); color: var(--red); }
- 
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 0.5rem 0;
-    }
- 
-    .hint {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      text-align: center;
-      line-height: 1.5;
-    }
-  </style>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
         :root {
             --red: #e50914;
             --red-dark: #a0060f;
@@ -280,9 +25,9 @@
             --border: rgba(255,255,255,0.07);
             --glow: rgba(229, 9, 20, 0.4);
             --speed: 0.3s;
+            --gold: #c9a84c;
+            --gold-light: #e2c47a;
         }
- 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
  
         body {
             font-family: 'Cairo', sans-serif;
@@ -296,150 +41,305 @@
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
  
-        /* NAVBAR */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            padding: 0 40px;
-            height: 70px;
+        /* ══════════════════════════════════════════
+           AUTH SCREEN
+        ══════════════════════════════════════════ */
+        #authScreen {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        #authScreen.hidden { display: none; }
+ 
+        .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); opacity: 0.15;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        .orb-1 { width: 400px; height: 400px; background: var(--gold); top: -100px; right: -100px; animation-delay: 0s; }
+        .orb-2 { width: 300px; height: 300px; background: #6a4fc8; bottom: -80px; left: -80px; animation-delay: 3s; }
+        .orb-3 { width: 200px; height: 200px; background: var(--gold-light); top: 50%; left: 30%; animation-delay: 5s; }
+ 
+        @keyframes orbFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+ 
+        .auth-card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 420px;
+            padding: 2.5rem; margin: 1rem;
+            background: #12121a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.08);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+ 
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .auth-logo { text-align: center; margin-bottom: 2rem; }
+        .auth-logo-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 16px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 0.75rem;
+            box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+        }
+        .auth-logo-title {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: 2px;
+        }
+        .auth-logo-sub {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.8rem; color: #7a7568;
+            margin-top: 0.2rem; letter-spacing: 1px;
+        }
+ 
+        .auth-tabs {
+            display: flex; background: #0a0a0f;
+            border-radius: 12px; padding: 4px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .auth-tab {
+            flex: 1; padding: 0.65rem; text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            border: none; border-radius: 10px;
+            cursor: pointer; transition: all 0.3s;
+            background: transparent; color: #7a7568;
+        }
+        .auth-tab.active {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #0a0a0f;
+            box-shadow: 0 4px 14px rgba(201,168,76,0.35);
+        }
+ 
+        .auth-form { display: none; flex-direction: column; gap: 1rem; }
+        .auth-form.active { display: flex; animation: fadeSlide 0.3s ease; }
+ 
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+ 
+        .auth-field { display: flex; flex-direction: column; gap: 0.4rem; }
+        .auth-field label {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.85rem; color: #7a7568; font-weight: 500;
+        }
+        .auth-field input {
+            background: #0a0a0f;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px; padding: 0.8rem 1rem;
+            color: #f0ece0;
+            font-family: 'Tajawal', sans-serif; font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s; outline: none; width: 100%;
+        }
+        .auth-field input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+        }
+        .auth-field input::placeholder { color: #7a7568; }
+ 
+        .auth-btn {
+            margin-top: 0.5rem; padding: 0.9rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #0a0a0f; border: none; border-radius: 12px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+        .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .auth-btn .spinner {
+            display: none; width: 18px; height: 18px;
+            border: 2px solid rgba(0,0,0,0.3); border-top-color: #0a0a0f;
+            border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto;
+        }
+        .auth-btn.loading .btn-text { display: none; }
+        .auth-btn.loading .spinner { display: block; }
+ 
+        @keyframes spin { to { transform: rotate(360deg); } }
+ 
+        .auth-msg {
+            padding: 0.8rem 1rem; border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem; font-weight: 500;
+            display: none; align-items: center; gap: 0.5rem;
+        }
+        .auth-msg.show { display: flex; }
+        .auth-msg.error { background: rgba(224,85,85,0.1); border: 1px solid rgba(224,85,85,0.3); color: #e05555; }
+        .auth-msg.success { background: rgba(76,175,130,0.1); border: 1px solid rgba(76,175,130,0.3); color: #4caf82; }
+ 
+        .auth-hint {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.78rem; color: #7a7568;
+            text-align: center; line-height: 1.5;
+        }
+ 
+        /* ══════════════════════════════════════════
+           MAIN SITE
+        ══════════════════════════════════════════ */
+        #mainSite { display: none; }
+        #mainSite.visible { display: block; }
+ 
+        /* NAVBAR */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 0 40px; height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
             background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             transition: background var(--speed);
         }
- 
         nav.scrolled { background: rgba(8,8,8,0.98); }
  
         .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
- 
-        .logo-icon {
-            width: 36px; height: 36px;
-            background: var(--red);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
+        .nav-logo-icon {
+            width: 36px; height: 36px; background: var(--red);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
         }
- 
-        .logo-icon svg { width: 20px; height: 20px; fill: white; }
- 
+        .nav-logo-icon svg { width: 20px; height: 20px; fill: white; }
         .logo-text { font-size: 22px; font-weight: 900; color: white; letter-spacing: 1px; }
         .logo-text span { color: var(--red); }
  
         .nav-actions { display: flex; align-items: center; gap: 15px; }
  
         .nav-search-btn {
-            background: none; border: none;
-            color: var(--text-muted); cursor: pointer;
+            background: none; border: none; color: var(--text-muted); cursor: pointer;
             padding: 8px; border-radius: 50%;
-            transition: color var(--speed), background var(--speed);
-            display: flex;
+            transition: color var(--speed), background var(--speed); display: flex;
         }
- 
         .nav-search-btn:hover { color: white; background: rgba(255,255,255,0.1); }
         .nav-search-btn svg { width: 20px; height: 20px; fill: currentColor; }
  
-        .watchlist-btn {
-            background: var(--red); color: white;
-            border: none; padding: 8px 18px;
-            border-radius: 20px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 14px; font-weight: 700;
-            cursor: pointer;
-            transition: background var(--speed), transform var(--speed);
-            display: flex; align-items: center; gap: 6px;
+        /* زر المستخدم في الناف */
+        .nav-user-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            color: white; padding: 6px 14px;
+            border-radius: 20px; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 14px;
+            transition: background var(--speed);
+        }
+        .nav-user-btn:hover { background: rgba(255,255,255,0.12); }
+        .nav-user-avatar {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; color: #0a0a0f;
         }
  
+        .watchlist-btn {
+            background: var(--red); color: white; border: none;
+            padding: 8px 18px; border-radius: 20px;
+            font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: background var(--speed), transform var(--speed);
+            display: flex; align-items: center; gap: 6px;
+        }
         .watchlist-btn:hover { background: var(--red-dark); transform: scale(1.03); }
         .watchlist-btn svg { width: 16px; height: 16px; fill: white; }
  
+        /* USER DROPDOWN */
+        .user-dropdown {
+            position: absolute; top: 70px; left: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 8px;
+            min-width: 200px; z-index: 1100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: none;
+        }
+        .user-dropdown.open { display: block; animation: fadeSlide 0.2s ease; }
+        .user-dropdown-info {
+            padding: 10px 12px 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 6px;
+        }
+        .user-dropdown-name { font-size: 14px; font-weight: 700; }
+        .user-dropdown-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .dropdown-logout {
+            width: 100%; padding: 9px 12px;
+            background: none; border: none; border-radius: 8px;
+            color: #e05555; font-family: 'Cairo', sans-serif;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            text-align: right; display: flex; align-items: center; gap: 8px;
+            transition: background 0.2s;
+        }
+        .dropdown-logout:hover { background: rgba(224,85,85,0.1); }
+ 
         /* HERO */
         .hero {
-            position: relative;
-            height: 520px;
+            position: relative; height: 520px;
             display: flex; align-items: flex-end;
-            padding: 60px 40px;
-            overflow: hidden;
-            margin-top: 70px;
+            padding: 60px 40px; overflow: hidden; margin-top: 70px;
         }
- 
         .hero-bg {
             position: absolute; inset: 0;
             background: linear-gradient(135deg, #0d0000 0%, #1a0505 40%, #0a0a0a 100%);
         }
- 
         .hero-bg::before {
-            content: '';
-            position: absolute; inset: 0;
+            content: ''; position: absolute; inset: 0;
             background:
                 radial-gradient(ellipse at 30% 50%, rgba(229,9,20,0.15) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 20%, rgba(229,9,20,0.08) 0%, transparent 50%);
         }
- 
         .hero-particles { position: absolute; inset: 0; overflow: hidden; }
- 
         .particle {
-            position: absolute;
-            width: 2px; height: 2px;
+            position: absolute; width: 2px; height: 2px;
             background: var(--red); border-radius: 50%;
             animation: floatUp linear infinite; opacity: 0.4;
         }
- 
         @keyframes floatUp {
             0% { transform: translateY(100%) translateX(0); opacity: 0; }
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
+            10% { opacity: 0.4; } 90% { opacity: 0.4; }
             100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
         }
- 
         .hero-content { position: relative; z-index: 2; max-width: 600px; }
- 
         .hero-badge {
             display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(229,9,20,0.2);
-            border: 1px solid rgba(229,9,20,0.4);
+            background: rgba(229,9,20,0.2); border: 1px solid rgba(229,9,20,0.4);
             padding: 5px 14px; border-radius: 20px;
-            font-size: 12px; color: #ff6b6b;
-            font-weight: 600; margin-bottom: 16px; letter-spacing: 1px;
+            font-size: 12px; color: #ff6b6b; font-weight: 600;
+            margin-bottom: 16px; letter-spacing: 1px;
         }
- 
         .hero-badge::before {
-            content: '';
-            width: 6px; height: 6px;
+            content: ''; width: 6px; height: 6px;
             background: var(--red); border-radius: 50%;
             animation: blink 1.5s ease-in-out infinite;
         }
- 
         @keyframes blink {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.8); }
         }
- 
         .hero-title {
-            font-size: 52px; font-weight: 900; line-height: 1.1;
-            margin-bottom: 12px;
+            font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 12px;
             background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
- 
-        .hero-subtitle {
-            color: var(--text-muted); font-size: 17px;
-            margin-bottom: 28px; line-height: 1.6;
-        }
- 
+        .hero-subtitle { color: var(--text-muted); font-size: 17px; margin-bottom: 28px; line-height: 1.6; }
         .hero-stats { display: flex; gap: 30px; }
- 
         .stat { text-align: center; }
         .stat-num { font-size: 28px; font-weight: 900; color: var(--red); }
         .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
- 
         .hero-gradient {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 100px;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
             background: linear-gradient(to top, var(--bg), transparent);
         }
  
@@ -449,44 +349,24 @@
             background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
             display: flex; align-items: flex-start; justify-content: center;
             padding-top: 150px;
-            opacity: 0; pointer-events: none;
-            transition: opacity var(--speed);
+            opacity: 0; pointer-events: none; transition: opacity var(--speed);
         }
- 
         .search-overlay.active { opacity: 1; pointer-events: all; }
- 
         .search-box { width: 100%; max-width: 650px; padding: 0 20px; }
- 
         .search-input-wrap { position: relative; }
- 
         .search-input-wrap svg {
-            position: absolute; right: 20px; top: 50%;
-            transform: translateY(-50%);
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
             width: 22px; height: 22px; fill: var(--text-muted);
         }
- 
         #searchInput {
-            width: 100%;
-            padding: 18px 55px 18px 20px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 20px;
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            color: white; outline: none;
+            width: 100%; padding: 18px 55px 18px 20px;
+            font-family: 'Cairo', sans-serif; font-size: 20px;
+            background: var(--card); border: 2px solid var(--border);
+            border-radius: 14px; color: white; outline: none;
             transition: border-color var(--speed), box-shadow var(--speed);
         }
- 
-        #searchInput:focus {
-            border-color: var(--red);
-            box-shadow: 0 0 0 4px rgba(229,9,20,0.1);
-        }
- 
-        .search-close {
-            margin-top: 16px; text-align: center;
-            color: var(--text-muted); font-size: 13px; cursor: pointer;
-        }
- 
+        #searchInput:focus { border-color: var(--red); box-shadow: 0 0 0 4px rgba(229,9,20,0.1); }
+        .search-close { margin-top: 16px; text-align: center; color: var(--text-muted); font-size: 13px; cursor: pointer; }
         .search-close kbd {
             background: var(--card); border: 1px solid var(--border);
             padding: 3px 8px; border-radius: 5px; font-size: 12px;
@@ -495,331 +375,169 @@
         /* PLAYER */
         .player-section { padding: 30px 40px; display: none; }
         .player-section.visible { display: block; }
- 
-        .player-header {
-            display: flex; align-items: center;
-            justify-content: space-between; margin-bottom: 15px;
-        }
- 
+        .player-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         .now-playing-label {
             display: flex; align-items: center; gap: 8px;
             color: var(--red); font-size: 13px; font-weight: 700;
             letter-spacing: 1px; text-transform: uppercase;
         }
- 
         .now-playing-label::before {
-            content: '';
-            width: 8px; height: 8px;
+            content: ''; width: 8px; height: 8px;
             background: var(--red); border-radius: 50%;
             animation: blink 1s ease-in-out infinite;
         }
- 
         #nowPlaying { font-size: 22px; font-weight: 700; color: white; }
- 
         .close-player-btn {
-            background: rgba(255,255,255,0.1); border: none;
-            color: white; width: 38px; height: 38px;
-            border-radius: 50%; cursor: pointer; font-size: 18px;
-            display: flex; align-items: center; justify-content: center;
-            transition: background var(--speed);
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; transition: background var(--speed);
         }
- 
         .close-player-btn:hover { background: rgba(229,9,20,0.4); }
- 
         .video-wrapper {
             position: relative; padding-top: 56.25%;
             background: #000; border-radius: 16px; overflow: hidden;
             box-shadow: 0 20px 60px rgba(229,9,20,0.15), 0 0 0 1px var(--border);
             max-width: 900px;
         }
- 
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
- 
         .video-error {
-            position: absolute; inset: 0;
-            display: none; align-items: center; justify-content: center;
+            position: absolute; inset: 0; display: none;
+            align-items: center; justify-content: center;
             flex-direction: column; gap: 10px;
             background: #0a0a0a; color: var(--text-muted); font-size: 15px;
         }
- 
         .video-error.show { display: flex; }
         .video-error svg { width: 40px; height: 40px; fill: var(--red); }
  
-        /* FILTERS */
+        /* FILTERS & GRID */
         .section-container { padding: 0 40px 40px; }
- 
-        .section-header {
-            display: flex; align-items: center;
-            justify-content: space-between; margin-bottom: 20px;
-        }
- 
-        .section-title {
-            font-size: 22px; font-weight: 700;
-            display: flex; align-items: center; gap: 10px;
-        }
- 
-        .section-title::before {
-            content: '';
-            width: 4px; height: 24px;
-            background: var(--red); border-radius: 2px;
-        }
- 
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .section-title { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: var(--red); border-radius: 2px; }
         .movie-count { font-size: 13px; color: var(--text-muted); font-weight: 400; }
- 
         .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
- 
         .filter-btn {
-            padding: 8px 18px; border-radius: 20px;
-            border: 1px solid var(--border);
+            padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border);
             background: var(--card); color: var(--text-muted);
             font-family: 'Cairo', sans-serif; font-size: 14px;
             cursor: pointer; transition: all var(--speed); white-space: nowrap;
         }
- 
         .filter-btn:hover { border-color: var(--red); color: white; }
         .filter-btn.active { background: var(--red); border-color: var(--red); color: white; font-weight: 700; }
  
-        /* GRID */
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
+        .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
  
         /* MOVIE CARD */
         .movie-card {
-            background: var(--card); border-radius: 12px;
-            overflow: hidden; cursor: pointer;
+            background: var(--card); border-radius: 12px; overflow: hidden; cursor: pointer;
             transition: transform var(--speed), box-shadow var(--speed);
-            position: relative;
-            border: 1px solid var(--border);
-            animation: fadeIn 0.4s ease forwards; opacity: 0;
+            position: relative; border: 1px solid var(--border);
+            animation: cardIn 0.4s ease forwards; opacity: 0;
         }
- 
-        @keyframes fadeIn {
+        @keyframes cardIn {
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
- 
-        .movie-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(229,9,20,0.25);
-            border-color: rgba(229,9,20,0.3);
-        }
- 
+        .movie-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 30px rgba(229,9,20,0.25); border-color: rgba(229,9,20,0.3); }
         .card-image-wrap { position: relative; height: 280px; overflow: hidden; }
- 
-        .movie-card img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.5s ease; display: block;
-        }
- 
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
         .movie-card:hover img { transform: scale(1.05); }
- 
         .card-overlay {
             position: absolute; inset: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
             opacity: 0; transition: opacity var(--speed);
             display: flex; align-items: center; justify-content: center;
         }
- 
         .movie-card:hover .card-overlay { opacity: 1; }
- 
         .play-btn-circle {
-            width: 56px; height: 56px;
-            background: var(--red); border-radius: 50%;
+            width: 56px; height: 56px; background: var(--red); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             transform: scale(0.8); transition: transform var(--speed);
             box-shadow: 0 0 20px var(--glow);
         }
- 
         .movie-card:hover .play-btn-circle { transform: scale(1); }
         .play-btn-circle svg { width: 24px; height: 24px; fill: white; margin-right: -2px; }
- 
         .fav-btn {
             position: absolute; top: 10px; left: 10px;
-            width: 34px; height: 34px;
-            background: rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
+            width: 34px; height: 34px; background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all var(--speed);
-            z-index: 10; opacity: 0;
+            cursor: pointer; transition: all var(--speed); z-index: 10; opacity: 0;
         }
- 
         .movie-card:hover .fav-btn { opacity: 1; }
         .fav-btn.active { opacity: 1; background: rgba(229,9,20,0.3); border-color: var(--red); }
         .fav-btn svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; transition: all var(--speed); }
         .fav-btn.active svg { fill: var(--red); stroke: var(--red); }
         .fav-btn:hover { transform: scale(1.1); }
- 
         .card-info { padding: 12px 14px 14px; }
- 
-        .card-title {
-            font-size: 14px; font-weight: 600; color: white;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin-bottom: 6px;
-        }
- 
+        .card-title { font-size: 14px; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
         .card-meta { display: flex; align-items: center; justify-content: space-between; }
         .card-year { font-size: 12px; color: var(--text-muted); }
- 
-        .card-badge {
-            font-size: 10px; font-weight: 700;
-            padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px;
-        }
- 
+        .card-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
         .badge-dubbed { background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
         .badge-sub { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
  
         /* WATCHLIST PANEL */
         .watchlist-panel {
-            position: fixed; top: 0; left: 0;
-            width: 360px; height: 100%;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            z-index: 1500;
-            transform: translateX(-100%);
+            position: fixed; top: 0; left: 0; width: 360px; height: 100%;
+            background: var(--surface); border-right: 1px solid var(--border);
+            z-index: 1500; transform: translateX(-100%);
             transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
             display: flex; flex-direction: column;
         }
- 
         .watchlist-panel.open { transform: translateX(0); }
- 
-        .watchlist-panel-header {
-            padding: 25px 20px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-        }
- 
-        .watchlist-panel-title {
-            font-size: 18px; font-weight: 700;
-            display: flex; align-items: center; gap: 8px;
-        }
- 
+        .watchlist-panel-header { padding: 25px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .watchlist-panel-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .watchlist-panel-title svg { width: 20px; height: 20px; fill: var(--red); }
- 
-        .panel-close {
-            background: none; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 22px; line-height: 1; padding: 4px;
-        }
- 
+        .panel-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 22px; line-height: 1; padding: 4px; }
         .panel-close:hover { color: white; }
- 
         .watchlist-list { flex: 1; overflow-y: auto; padding: 15px; }
- 
-        .watchlist-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px; border-radius: 10px; cursor: pointer;
-            transition: background var(--speed);
-            border: 1px solid transparent; margin-bottom: 8px;
-        }
- 
+        .watchlist-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; cursor: pointer; transition: background var(--speed); border: 1px solid transparent; margin-bottom: 8px; }
         .watchlist-item:hover { background: var(--card); border-color: var(--border); }
- 
-        .watchlist-item img {
-            width: 52px; height: 70px; object-fit: cover;
-            border-radius: 6px; flex-shrink: 0;
-        }
- 
+        .watchlist-item img { width: 52px; height: 70px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
         .watchlist-item-info { flex: 1; overflow: hidden; }
- 
-        .watchlist-item-title {
-            font-size: 13px; font-weight: 600;
-            white-space: nowrap; overflow: hidden;
-            text-overflow: ellipsis; margin-bottom: 4px;
-        }
- 
-        .watchlist-item-remove {
-            background: none; border: none;
-            color: var(--text-muted); cursor: pointer;
-            padding: 4px; border-radius: 4px;
-            transition: color var(--speed); flex-shrink: 0;
-        }
- 
+        .watchlist-item-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .watchlist-item-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; transition: color var(--speed); flex-shrink: 0; }
         .watchlist-item-remove:hover { color: var(--red); }
         .watchlist-item-remove svg { width: 16px; height: 16px; fill: currentColor; }
- 
-        .watchlist-empty {
-            text-align: center; color: var(--text-muted);
-            padding: 60px 20px; font-size: 15px;
-        }
- 
+        .watchlist-empty { text-align: center; color: var(--text-muted); padding: 60px 20px; font-size: 15px; }
         .watchlist-empty svg { width: 48px; height: 48px; fill: var(--border); margin-bottom: 12px; display: block; margin-inline: auto; }
- 
-        /* NO RESULTS */
-        .no-results {
-            grid-column: 1/-1; text-align: center;
-            padding: 60px 20px; color: var(--text-muted);
-        }
- 
-        .no-results svg { width: 50px; height: 50px; fill: var(--border); margin-bottom: 12px; display: block; margin-inline: auto; }
-        .no-results h3 { font-size: 18px; color: var(--text); margin-bottom: 6px; }
  
         /* RECENTLY WATCHED */
         .recent-section { padding: 0 40px 30px; display: none; }
         .recent-section.visible { display: block; }
- 
-        .recent-scroll {
-            display: flex; gap: 14px;
-            overflow-x: auto; padding-bottom: 10px;
-            scrollbar-width: none;
-        }
- 
+        .recent-scroll { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .recent-scroll::-webkit-scrollbar { display: none; }
- 
-        .recent-card {
-            flex-shrink: 0; width: 130px;
-            cursor: pointer; transition: transform var(--speed);
-        }
- 
+        .recent-card { flex-shrink: 0; width: 130px; cursor: pointer; transition: transform var(--speed); }
         .recent-card:hover { transform: scale(1.03); }
+        .recent-card img { width: 130px; height: 180px; object-fit: cover; border-radius: 8px; display: block; border: 1px solid var(--border); }
+        .recent-card-title { font-size: 12px; margin-top: 6px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
  
-        .recent-card img {
-            width: 130px; height: 180px; object-fit: cover;
-            border-radius: 8px; display: block;
-            border: 1px solid var(--border);
-        }
- 
-        .recent-card-title {
-            font-size: 12px; margin-top: 6px;
-            color: var(--text-muted);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        /* NO RESULTS */
+        .no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .no-results svg { width: 50px; height: 50px; fill: var(--border); margin-bottom: 12px; display: block; margin-inline: auto; }
+        .no-results h3 { font-size: 18px; color: var(--text); margin-bottom: 6px; }
  
         /* TOAST */
         .toast {
             position: fixed; bottom: 30px; right: 30px;
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 10px; padding: 14px 20px;
-            font-size: 14px; font-weight: 600;
-            z-index: 3000;
-            transform: translateY(100px); opacity: 0;
+            border-radius: 10px; padding: 14px 20px; font-size: 14px; font-weight: 600;
+            z-index: 3000; transform: translateY(100px); opacity: 0;
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             display: flex; align-items: center; gap: 10px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         }
- 
         .toast.show { transform: translateY(0); opacity: 1; }
-        .toast-icon { font-size: 18px; }
  
         /* FOOTER */
-        footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 30px 40px; text-align: center;
-        }
- 
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 30px 40px; text-align: center; }
         .footer-logo { font-size: 20px; font-weight: 900; color: white; margin-bottom: 8px; }
         .footer-logo span { color: var(--red); }
         .footer-text { color: var(--text-muted); font-size: 13px; }
  
         /* BACKDROP */
-        .backdrop {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.5); z-index: 1400;
-            opacity: 0; pointer-events: none; transition: opacity var(--speed);
-        }
- 
+        .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1400; opacity: 0; pointer-events: none; transition: opacity var(--speed); }
         .backdrop.active { opacity: 1; pointer-events: all; }
  
         /* RESPONSIVE */
@@ -834,323 +552,315 @@
             .card-image-wrap { height: 220px; }
             .watchlist-panel { width: 100%; }
             .logo-text { font-size: 17px; }
+            .nav-user-btn span { display: none; }
         }
     </style>
 </head>
 <body>
- <div class="bg-orbs">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+ 
+<!-- ══════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════ -->
+<div id="authScreen">
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+ 
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="auth-logo-icon">🎬</div>
+            <div class="auth-logo-title">RAOUIA</div>
+            <div class="auth-logo-sub">MOVIES</div>
+        </div>
+ 
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">تسجيل الدخول</button>
+            <button class="auth-tab" onclick="switchTab('register')">حساب جديد</button>
+        </div>
+ 
+        <!-- فورم الدخول -->
+        <div class="auth-form active" id="loginForm">
+            <div id="loginMsg" class="auth-msg"></div>
+            <div class="auth-field">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="loginEmail" placeholder="example@email.com" />
+            </div>
+            <div class="auth-field">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" />
+            </div>
+            <button class="auth-btn" id="loginBtn" onclick="login()">
+                <span class="btn-text">دخول</span>
+                <div class="spinner"></div>
+            </button>
+        </div>
+ 
+        <!-- فورم التسجيل -->
+        <div class="auth-form" id="registerForm">
+            <div id="registerMsg" class="auth-msg"></div>
+            <div class="auth-field">
+                <label>اسم المستخدم</label>
+                <input type="text" id="regUsername" placeholder="اسمك هنا" />
+            </div>
+            <div class="auth-field">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="regEmail" placeholder="example@email.com" />
+            </div>
+            <div class="auth-field">
+                <label>كلمة المرور</label>
+                <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
+            </div>
+            <button class="auth-btn" id="registerBtn" onclick="register()">
+                <span class="btn-text">إنشاء الحساب</span>
+                <div class="spinner"></div>
+            </button>
+            <p class="auth-hint">بالتسجيل توافق على شروط الاستخدام</p>
+        </div>
+    </div>
 </div>
  
-<div class="card">
+<!-- ══════════════════════════════════════════
+     MAIN SITE
+══════════════════════════════════════════ -->
+<div id="mainSite">
  
-  <div class="logo">
-    <div class="logo-icon">🎬</div>
-    <div class="logo-title">RAOUIA</div>
-    <div class="logo-sub">MOVIES</div>
-  </div>
+    <nav id="navbar">
+        <a class="nav-logo" href="#">
+            <div class="nav-logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/></svg>
+            </div>
+            <span class="logo-text">RAOUIA <span>Movies</span></span>
+        </a>
+        <div class="nav-actions">
+            <button class="nav-search-btn" onclick="toggleSearch()" title="بحث">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            </button>
+            <button class="watchlist-btn" onclick="toggleWatchlist()">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                المفضلة (<span id="favCount">0</span>)
+            </button>
+            <!-- زر المستخدم -->
+            <button class="nav-user-btn" onclick="toggleUserDropdown()" id="navUserBtn">
+                <div class="nav-user-avatar" id="navUserAvatar">؟</div>
+                <span id="navUserName">المستخدم</span>
+            </button>
+        </div>
+    </nav>
  
-  <!-- لوحة المستخدم بعد الدخول -->
-  <div class="user-panel" id="userPanel">
-    <div class="user-avatar">👤</div>
-    <div>
-      <div class="user-name" id="displayName">—</div>
-      <div class="user-email" id="displayEmail">—</div>
-    </div>
-    <div class="divider" style="width:100%"></div>
-    <p style="color:var(--text-dim);font-size:0.9rem">أنت مسجل الدخول بنجاح ✓</p>
-    <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
-  </div>
- 
-  <!-- التبويبات والفورم -->
-  <div id="authSection">
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('login')">تسجيل الدخول</button>
-      <button class="tab" onclick="switchTab('register')">حساب جديد</button>
-    </div>
- 
-    <!-- فورم الدخول -->
-    <div class="form active" id="loginForm">
-      <div id="loginMsg" class="message"></div>
-      <div class="field">
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="loginEmail" placeholder="example@email.com" />
-      </div>
-      <div class="field">
-        <label>كلمة المرور</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" />
-      </div>
-      <button class="btn-submit" id="loginBtn" onclick="login()">
-        <span class="btn-text">دخول</span>
-        <div class="spinner"></div>
-      </button>
+    <!-- USER DROPDOWN -->
+    <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-info">
+            <div class="user-dropdown-name" id="dropdownName">—</div>
+            <div class="user-dropdown-email" id="dropdownEmail">—</div>
+        </div>
+        <button class="dropdown-logout" onclick="logout()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            تسجيل الخروج
+        </button>
     </div>
  
-    <!-- فورم التسجيل -->
-    <div class="form" id="registerForm">
-      <div id="registerMsg" class="message"></div>
-      <div class="field">
-        <label>اسم المستخدم</label>
-        <input type="text" id="regUsername" placeholder="اسمك هنا" />
-      </div>
-      <div class="field">
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="regEmail" placeholder="example@email.com" />
-      </div>
-      <div class="field">
-        <label> كلمة مرور البريد الالكتروني</label>
-        <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
-      </div>
-      <button class="btn-submit" id="registerBtn" onclick="register()">
-        <span class="btn-text">إنشاء الحساب</span>
-        <div class="spinner"></div>
-      </button>
-      <p class="hint">بالتسجيل توافق على شروط الاستخدام</p>
+    <!-- SEARCH OVERLAY -->
+    <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+        <div class="search-box">
+            <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="searchInput" placeholder="ابحث عن فيلم..." autocomplete="off">
+            </div>
+            <div class="search-close" onclick="toggleSearch()">اضغط <kbd>ESC</kbd> للإغلاق</div>
+        </div>
     </div>
-  </div>
  
-</div>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-badge">✦ مكتبة الأفلام المميزة</div>
+            <h1 class="hero-title">Disney for<br>RAOUIA 🎬</h1>
+            <p class="hero-subtitle">مجموعة مختارة من أجمل أفلام الكرتون والرسوم المتحركة — مدبلجة ومترجمة للعائلة العربية</p>
+            <div class="hero-stats">
+                <div class="stat"><div class="stat-num" id="totalCount">33</div><div class="stat-label">فيلم متاح</div></div>
+                <div class="stat"><div class="stat-num">HD</div><div class="stat-label">جودة عالية</div></div>
+                <div class="stat"><div class="stat-num">مجاناً</div><div class="stat-label">بدون اشتراك</div></div>
+            </div>
+        </div>
+        <div class="hero-gradient"></div>
+    </section>
+ 
+    <!-- PLAYER -->
+    <section class="player-section" id="playerSection">
+        <div class="player-header">
+            <div>
+                <div class="now-playing-label">يُشاهد الآن</div>
+                <div id="nowPlaying">—</div>
+            </div>
+            <button class="close-player-btn" onclick="closePlayer()">✕</button>
+        </div>
+        <div class="video-wrapper">
+            <video id="mainVideo" controls></video>
+            <div class="video-error" id="videoError">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                <span>تعذّر تحميل الفيلم، حاول لاحقاً</span>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- RECENTLY WATCHED -->
+    <section class="recent-section" id="recentSection">
+        <div class="section-header"><h2 class="section-title">شاهدت مؤخراً</h2></div>
+        <div class="recent-scroll" id="recentList"></div>
+    </section>
+ 
+    <!-- MAIN GRID -->
+    <section class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">جميع الأفلام <span class="movie-count" id="movieCountLabel"></span></h2>
+        </div>
+        <div class="filters" id="filtersContainer">
+            <button class="filter-btn active" data-filter="all">🎬 الكل</button>
+            <button class="filter-btn" data-filter="مدبلج">🎙️ مدبلج</button>
+            <button class="filter-btn" data-filter="مترجم">📝 مترجم</button>
+            <button class="filter-btn" data-filter="disney">🏰 Disney</button>
+            <button class="filter-btn" data-filter="pixar">✨ Pixar</button>
+            <button class="filter-btn" data-filter="dreamworks">🎭 DreamWorks</button>
+        </div>
+        <div class="movies-grid" id="moviesContainer"></div>
+    </section>
+ 
+    <!-- WATCHLIST PANEL -->
+    <div class="backdrop" id="backdrop" onclick="closeWatchlist()"></div>
+    <div class="watchlist-panel" id="watchlistPanel">
+        <div class="watchlist-panel-header">
+            <div class="watchlist-panel-title">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                قائمة المفضلة
+            </div>
+            <button class="panel-close" onclick="closeWatchlist()">✕</button>
+        </div>
+        <div class="watchlist-list" id="watchlistItems"></div>
+    </div>
+ 
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMsg"></span>
+    </div>
+ 
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">RAOUIA <span>Movies</span></div>
+        <div class="footer-text">تم التصميم بحب 💖 | مكتبة أفلام راوية &copy; 2026</div>
+    </footer>
+ 
+</div><!-- end mainSite -->
  
 <script>
-  // ══════════════════════════════
-  //  إعداد Supabase
-  // ══════════════════════════════
-  const SUPABASE_URL = "https://cahtryiciwfhscefxthk.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhaHRyeWljaXdmaHNjZWZ4dGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MjQ3MTIsImV4cCI6MjA5MDMwMDcxMn0.QEDGlSK3vGCbbzjVVXIgy3wQhkxnUhcnhLFfFV_E64s";
-  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ══════════════════════════════════════════
+//  SUPABASE
+// ══════════════════════════════════════════
+const SUPABASE_URL = "https://cahtryiciwfhscefxthk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhaHRyeWljaXdmaHNjZWZ4dGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MjQ3MTIsImV4cCI6MjA5MDMwMDcxMn0.QEDGlSK3vGCbbzjVVXIgy3wQhkxnUhcnhLFfFV_E64s";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
  
-  // ══════════════════════════════
-  //  تبديل التبويبات
-  // ══════════════════════════════
-  function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+// ══════════════════════════════════════════
+//  AUTH FUNCTIONS
+// ══════════════════════════════════════════
+function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach((t, i) => {
+        t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
     });
     document.getElementById('loginForm').classList.toggle('active', tab === 'login');
     document.getElementById('registerForm').classList.toggle('active', tab === 'register');
-  }
+}
  
-  // ══════════════════════════════
-  //  رسائل
-  // ══════════════════════════════
-  function showMsg(id, text, type) {
+function showMsg(id, text, type) {
     const el = document.getElementById(id);
     el.textContent = (type === 'error' ? '⚠ ' : '✓ ') + text;
-    el.className = `message ${type} show`;
-  }
-  function hideMsg(id) {
-    document.getElementById(id).className = 'message';
-  }
+    el.className = `auth-msg ${type} show`;
+}
+function hideMsg(id) { document.getElementById(id).className = 'auth-msg'; }
  
-  function setLoading(btnId, loading) {
+function setLoading(btnId, loading) {
     const btn = document.getElementById(btnId);
     btn.disabled = loading;
     btn.classList.toggle('loading', loading);
-  }
+}
  
-  // ══════════════════════════════
-  //  تسجيل الدخول
-  // ══════════════════════════════
-  async function login() {
+async function login() {
     hideMsg('loginMsg');
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
- 
     if (!email || !password) return showMsg('loginMsg', 'يرجى ملء جميع الحقول', 'error');
- 
     setLoading('loginBtn', true);
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
     setLoading('loginBtn', false);
- 
     if (error) return showMsg('loginMsg', 'البريد أو كلمة المرور غير صحيحة', 'error');
+    enterSite(data.user);
+}
  
-    showUserPanel(data.user);
-  }
- 
-  // ══════════════════════════════
-  //  إنشاء حساب
-  // ══════════════════════════════
-  async function register() {
+async function register() {
     hideMsg('registerMsg');
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
- 
     if (!username || !email || !password) return showMsg('registerMsg', 'يرجى ملء جميع الحقول', 'error');
-    if (password.length < 6) return showMsg('registerMsg', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
- 
+    if (password.length < 6) return showMsg('registerMsg', 'كلمة المرور 6 أحرف على الأقل', 'error');
     setLoading('registerBtn', true);
- 
     const { data, error } = await sb.auth.signUp({ email, password });
- 
-    if (error) {
-      setLoading('registerBtn', false);
-      return showMsg('registerMsg', 'البريد الإلكتروني مستخدم مسبقاً', 'error');
-    }
- 
-    // حفظ username في جدول users
+    if (error) { setLoading('registerBtn', false); return showMsg('registerMsg', 'البريد مستخدم مسبقاً', 'error'); }
     await sb.from('users').insert([{ id: data.user.id, username, email }]);
- 
     setLoading('registerBtn', false);
-    showMsg('registerMsg', 'تم إنشاء الحساب بنجاح!', 'success');
-    setTimeout(() => switchTab('login'), 1500);
-  }
+    showMsg('registerMsg', 'تم إنشاء الحساب! جاري الدخول...', 'success');
+    setTimeout(() => enterSite(data.user), 1200);
+}
  
-  // ══════════════════════════════
-  //  تسجيل الخروج
-  // ══════════════════════════════
-  async function logout() {
+async function logout() {
     await sb.auth.signOut();
-    document.getElementById('userPanel').classList.remove('show');
-    document.getElementById('authSection').style.display = '';
-  }
+    document.getElementById('mainSite').classList.remove('visible');
+    document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('userDropdown').classList.remove('open');
+    // مسح الفيديو
+    const video = document.getElementById('mainVideo');
+    video.pause();
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+    document.getElementById('playerSection').classList.remove('visible');
+}
  
-  // ══════════════════════════════
-  //  عرض لوحة المستخدم
-  // ══════════════════════════════
-  async function showUserPanel(user) {
-    // جلب اسم المستخدم من جدول users
+async function enterSite(user) {
+    // جلب اسم المستخدم
     const { data } = await sb.from('users').select('username').eq('id', user.id).single();
-    document.getElementById('displayName').textContent = data?.username || 'مستخدم';
-    document.getElementById('displayEmail').textContent = user.email;
-    document.getElementById('userPanel').classList.add('show');
-    document.getElementById('authSection').style.display = 'none';
-  }
+    const username = data?.username || user.email.split('@')[0];
+    const initials = username.charAt(0).toUpperCase();
  
-  // ══════════════════════════════
-  //  تحقق هل المستخدم مسجل دخول
-  // ══════════════════════════════
-  (async () => {
-    const { data } = await sb.auth.getSession();
-    if (data.session?.user) showUserPanel(data.session.user);
-  })();
-</script>
-<!-- NAVBAR -->
-<nav id="navbar">
-    <a class="nav-logo" href="#">
-        <div class="logo-icon">
-            <svg viewBox="0 0 24 24"><path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/></svg>
-        </div>
-        <span class="logo-text">RAOUIA <span>Movies</span></span>
-    </a>
-    <div class="nav-actions">
-        <button class="nav-search-btn" onclick="toggleSearch()" title="بحث">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        </button>
-        <button class="watchlist-btn" onclick="toggleWatchlist()">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            المفضلة (<span id="favCount">0</span>)
-        </button>
-    </div>
-</nav>
+    // تحديث الناف
+    document.getElementById('navUserAvatar').textContent = initials;
+    document.getElementById('navUserName').textContent = username;
+    document.getElementById('dropdownName').textContent = username;
+    document.getElementById('dropdownEmail').textContent = user.email;
  
-<!-- SEARCH OVERLAY -->
-<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
-    <div class="search-box">
-        <div class="search-input-wrap">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" placeholder="ابحث عن فيلم..." autocomplete="off">
-        </div>
-        <div class="search-close" onclick="toggleSearch()">اضغط <kbd>ESC</kbd> للإغلاق</div>
-    </div>
-</div>
+    // إخفاء auth وإظهار الموقع
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('mainSite').classList.add('visible');
  
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-particles" id="particles"></div>
-    <div class="hero-content">
-        <div class="hero-badge">✦ مكتبة الأفلام المميزة</div>
-        <h1 class="hero-title">Disney for<br>RAOUIA 🎬</h1>
-        <p class="hero-subtitle">مجموعة مختارة من أجمل أفلام الكرتون والرسوم المتحركة — مدبلجة ومترجمة للعائلة العربية</p>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-num" id="totalCount">33</div>
-                <div class="stat-label">فيلم متاح</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">HD</div>
-                <div class="stat-label">جودة عالية</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">مجاناً</div>
-                <div class="stat-label">بدون اشتراك</div>
-            </div>
-        </div>
-    </div>
-    <div class="hero-gradient"></div>
-</section>
+    // تهيئة الموقع
+    initSite();
+}
  
-<!-- PLAYER -->
-<section class="player-section" id="playerSection">
-    <div class="player-header">
-        <div>
-            <div class="now-playing-label">يُشاهد الآن</div>
-            <div id="nowPlaying">—</div>
-        </div>
-        <button class="close-player-btn" onclick="closePlayer()" title="إغلاق المشغل">✕</button>
-    </div>
-    <div class="video-wrapper">
-        <video id="mainVideo" controls></video>
-        <div class="video-error" id="videoError">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-            <span>تعذّر تحميل الفيلم، حاول لاحقاً</span>
-        </div>
-    </div>
-</section>
+function toggleUserDropdown() {
+    document.getElementById('userDropdown').classList.toggle('open');
+}
  
-<!-- RECENTLY WATCHED -->
-<section class="recent-section" id="recentSection">
-    <div class="section-header">
-        <h2 class="section-title">شاهدت مؤخراً</h2>
-    </div>
-    <div class="recent-scroll" id="recentList"></div>
-</section>
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#navUserBtn') && !e.target.closest('#userDropdown')) {
+        document.getElementById('userDropdown').classList.remove('open');
+    }
+});
  
-<!-- MAIN -->
-<section class="section-container">
-    <div class="section-header">
-        <h2 class="section-title">جميع الأفلام <span class="movie-count" id="movieCountLabel"></span></h2>
-    </div>
-    <div class="filters" id="filtersContainer">
-        <button class="filter-btn active" data-filter="all">🎬 الكل</button>
-        <button class="filter-btn" data-filter="مدبلج">🎙️ مدبلج</button>
-        <button class="filter-btn" data-filter="مترجم">📝 مترجم</button>
-        <button class="filter-btn" data-filter="disney">🏰 Disney</button>
-        <button class="filter-btn" data-filter="pixar">✨ Pixar</button>
-        <button class="filter-btn" data-filter="dreamworks">🎭 DreamWorks</button>
-    </div>
-    <div class="movies-grid" id="moviesContainer"></div>
-</section>
- 
-<!-- WATCHLIST PANEL -->
-<div class="backdrop" id="backdrop" onclick="closeWatchlist()"></div>
-<div class="watchlist-panel" id="watchlistPanel">
-    <div class="watchlist-panel-header">
-        <div class="watchlist-panel-title">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            قائمة المفضلة
-        </div>
-        <button class="panel-close" onclick="closeWatchlist()">✕</button>
-    </div>
-    <div class="watchlist-list" id="watchlistItems"></div>
-</div>
- 
-<!-- TOAST -->
-<div class="toast" id="toast">
-    <span class="toast-icon" id="toastIcon">✅</span>
-    <span id="toastMsg"></span>
-</div>
- 
-<!-- FOOTER -->
-<footer>
-    <div class="footer-logo">RAOUIA <span>Movies</span></div>
-    <div class="footer-text">تم التصميم بحب 💖 | مكتبة أفلام راوية &copy; 2026</div>
-</footer>
- 
-<script>
+// ══════════════════════════════════════════
+//  MOVIES DATA
+// ══════════════════════════════════════════
 const moviesData = [
     { title: "فيلم Frozen", image: "1.jpg", url: "https://egyy34dffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/01/00087/55mcxx34bn9g_n/index-v1-a1.m3u8?t=UPLDVeiEePj3woIYI8V0zHPpQOGK5sYK1E-nQeZCpII&s=1774341689&e=43200&f=439553&i=0.0&sp=0", studio: "disney" },
     { title: "فيلم Smurfs 3 The Lost Village 2017", image: "2.jpg", url: "https://egyy39nnndffdvwerwe432vxcvxcvbcx321scvxv45cdsw1dfdsfsd.visitmycityfor365days.online/hls2/02/00088/wzpxx65kct26_h/index-v1-a1.m3u8?t=9DqKO83mghqxsCezKFuBEnRbCFxDjYlaFSJqB5gQPs0&s=1774342468&e=43200&f=443881&i=0.0&sp=0", studio: "other" },
@@ -1187,17 +897,51 @@ const moviesData = [
     { title: "Ferdinand", image: "33.jpg", url: "https://vsped-store9-vnz.cdnz.quest/hls2/02/00085/98cuhz1i9yar_n/index-v1-a1.m3u8?t=e42-H9tVOg5OmhGP9F6elkreJxDm8_fk_yYn0e0SODA&s=1774384294&e=43200&v=1535265&i=0.3&sp=0", studio: "other" }
 ];
  
+// ══════════════════════════════════════════
+//  SITE LOGIC
+// ══════════════════════════════════════════
 let hlsPlayer = null;
 let currentFilter = 'all';
 let watchlist = JSON.parse(localStorage.getItem('raouia_watchlist') || '[]');
 let recentlyWatched = JSON.parse(localStorage.getItem('raouia_recent') || '[]');
 let currentSearch = '';
+let siteInitialized = false;
  
-function extractYear(title) {
-    const m = title.match(/\b(19|20)\d{2}\b/);
-    return m ? m[0] : '';
+function initSite() {
+    if (siteInitialized) return;
+    siteInitialized = true;
+ 
+    document.getElementById('totalCount').textContent = moviesData.length;
+    createParticles();
+    renderMovies();
+    renderRecent();
+    updateFavCount();
+ 
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            applyFilter();
+        });
+    });
+ 
+    document.getElementById('searchInput').addEventListener('input', e => {
+        currentSearch = e.target.value.toLowerCase().trim();
+        applyFilter();
+    });
+ 
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+ 
+    const saved = localStorage.getItem('raouia_lastMovie');
+    if (saved) {
+        try { const m = JSON.parse(saved); playMovie(m.url, m.title, m.image, true); } catch(e) {}
+    }
 }
  
+function extractYear(title) { const m = title.match(/\b(19|20)\d{2}\b/); return m ? m[0] : ''; }
 function getBadge(title) {
     if (title.includes('مدبلج')) return '<span class="card-badge badge-dubbed">مدبلج</span>';
     if (title.includes('مترجم')) return '<span class="card-badge badge-sub">مترجم</span>';
@@ -1207,46 +951,28 @@ function getBadge(title) {
 function renderMovies(list = moviesData) {
     const container = document.getElementById('moviesContainer');
     document.getElementById('movieCountLabel').textContent = `(${list.length} فيلم)`;
- 
     if (list.length === 0) {
-        container.innerHTML = `
-            <div class="no-results">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <h3>لا توجد نتائج</h3>
-                <p>جرب كلمة بحث مختلفة</p>
-            </div>`;
+        container.innerHTML = `<div class="no-results"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><h3>لا توجد نتائج</h3><p>جرب كلمة بحث مختلفة</p></div>`;
         return;
     }
- 
     container.innerHTML = '';
     list.forEach((movie, i) => {
         const isFav = watchlist.some(w => w.title === movie.title);
-        const year = extractYear(movie.title);
-        const badge = getBadge(movie.title);
-        const safeTitle = movie.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.style.animationDelay = `${(i % 12) * 0.05}s`;
         card.innerHTML = `
             <div class="card-image-wrap">
                 <img src="${movie.image}" alt="${movie.title}" loading="lazy" onerror="this.src='https://placehold.co/200x280/181818/555?text=%F0%9F%8E%AC'">
-                <div class="card-overlay">
-                    <div class="play-btn-circle">
-                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
-                </div>
-                <button class="fav-btn ${isFav ? 'active' : ''}" data-title="${safeTitle}" data-image="${movie.image}" data-url="${movie.url}">
+                <div class="card-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+                <button class="fav-btn ${isFav ? 'active' : ''}">
                     <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </button>
             </div>
             <div class="card-info">
                 <div class="card-title" title="${movie.title}">${movie.title}</div>
-                <div class="card-meta">
-                    <span class="card-year">${year}</span>
-                    ${badge}
-                </div>
-            </div>
-        `;
+                <div class="card-meta"><span class="card-year">${extractYear(movie.title)}</span>${getBadge(movie.title)}</div>
+            </div>`;
         card.querySelector('.fav-btn').addEventListener('click', function(e) {
             e.stopPropagation();
             toggleFav(this, movie.title, movie.image, movie.url);
@@ -1270,54 +996,29 @@ function applyFilter() {
     renderMovies(list);
 }
  
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
-        applyFilter();
-    });
-});
- 
-document.getElementById('searchInput').addEventListener('input', e => {
-    currentSearch = e.target.value.toLowerCase().trim();
-    applyFilter();
-});
- 
 function toggleSearch() {
     const overlay = document.getElementById('searchOverlay');
     overlay.classList.toggle('active');
     if (overlay.classList.contains('active')) setTimeout(() => document.getElementById('searchInput').focus(), 100);
 }
- 
-function handleOverlayClick(e) {
-    if (e.target === document.getElementById('searchOverlay')) toggleSearch();
-}
- 
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-});
+function handleOverlayClick(e) { if (e.target === document.getElementById('searchOverlay')) toggleSearch(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active'); });
  
 function playMovie(url, title, image, isInitial = false) {
     const section = document.getElementById('playerSection');
     const video = document.getElementById('mainVideo');
     const errorDiv = document.getElementById('videoError');
- 
     section.classList.add('visible');
     document.getElementById('nowPlaying').textContent = title;
     errorDiv.classList.remove('show');
- 
     if (!isInitial) window.scrollTo({ top: 0, behavior: 'smooth' });
- 
     recentlyWatched = recentlyWatched.filter(r => r.title !== title);
     recentlyWatched.unshift({ title, image, url });
     if (recentlyWatched.length > 6) recentlyWatched.pop();
     localStorage.setItem('raouia_recent', JSON.stringify(recentlyWatched));
     localStorage.setItem('raouia_lastMovie', JSON.stringify({ url, title, image }));
     renderRecent();
- 
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
- 
     if (Hls.isSupported()) {
         hlsPlayer = new Hls({ autoStartLoad: false });
         hlsPlayer.loadSource(url);
@@ -1327,7 +1028,6 @@ function playMovie(url, title, image, isInitial = false) {
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = url;
     }
- 
     video.onerror = () => errorDiv.classList.add('show');
 }
  
@@ -1348,59 +1048,40 @@ function renderRecent() {
         <div class="recent-card" onclick="playMovie('${m.url}', '${m.title.replace(/'/g, "\\'")}', '${m.image}')">
             <img src="${m.image}" alt="${m.title}" loading="lazy">
             <div class="recent-card-title">${m.title}</div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
  
 function toggleFav(btn, title, image, url) {
     const exists = watchlist.some(w => w.title === title);
-    if (exists) {
-        watchlist = watchlist.filter(w => w.title !== title);
-        btn.classList.remove('active');
-        showToast('❌', 'تمت الإزالة من المفضلة');
-    } else {
-        watchlist.push({ title, image, url });
-        btn.classList.add('active');
-        showToast('❤️', 'تمت الإضافة للمفضلة');
-    }
+    if (exists) { watchlist = watchlist.filter(w => w.title !== title); btn.classList.remove('active'); showToast('❌', 'تمت الإزالة من المفضلة'); }
+    else { watchlist.push({ title, image, url }); btn.classList.add('active'); showToast('❤️', 'تمت الإضافة للمفضلة'); }
     localStorage.setItem('raouia_watchlist', JSON.stringify(watchlist));
-    updateFavCount();
-    renderWatchlist();
+    updateFavCount(); renderWatchlist();
 }
  
-function updateFavCount() {
-    document.getElementById('favCount').textContent = watchlist.length;
-}
+function updateFavCount() { document.getElementById('favCount').textContent = watchlist.length; }
  
 function renderWatchlist() {
     const container = document.getElementById('watchlistItems');
     if (watchlist.length === 0) {
-        container.innerHTML = `
-            <div class="watchlist-empty">
-                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <p>قائمة المفضلة فارغة<br>اضغط ❤️ على أي فيلم لإضافته</p>
-            </div>`;
+        container.innerHTML = `<div class="watchlist-empty"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><p>قائمة المفضلة فارغة</p></div>`;
         return;
     }
     container.innerHTML = watchlist.map((m, i) => `
         <div class="watchlist-item" onclick="playMovie('${m.url}', '${m.title.replace(/'/g, "\\'")}', '${m.image}'); closeWatchlist()">
             <img src="${m.image}" alt="${m.title}">
-            <div class="watchlist-item-info">
-                <div class="watchlist-item-title">${m.title}</div>
-            </div>
+            <div class="watchlist-item-info"><div class="watchlist-item-title">${m.title}</div></div>
             <button class="watchlist-item-remove" onclick="removeFromWatchlist(event, ${i})">
                 <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
  
 function removeFromWatchlist(e, index) {
     e.stopPropagation();
     watchlist.splice(index, 1);
     localStorage.setItem('raouia_watchlist', JSON.stringify(watchlist));
-    updateFavCount();
-    renderWatchlist();
+    updateFavCount(); renderWatchlist();
 }
  
 function toggleWatchlist() {
@@ -1408,7 +1089,6 @@ function toggleWatchlist() {
     document.getElementById('backdrop').classList.add('active');
     renderWatchlist();
 }
- 
 function closeWatchlist() {
     document.getElementById('watchlistPanel').classList.remove('open');
     document.getElementById('backdrop').classList.remove('active');
@@ -1424,10 +1104,6 @@ function showToast(icon, msg) {
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
  
-window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-});
- 
 function createParticles() {
     const container = document.getElementById('particles');
     for (let i = 0; i < 20; i++) {
@@ -1438,20 +1114,15 @@ function createParticles() {
     }
 }
  
-// INIT
-document.getElementById('totalCount').textContent = moviesData.length;
-createParticles();
-renderMovies();
-renderRecent();
-updateFavCount();
- 
-const saved = localStorage.getItem('raouia_lastMovie');
-if (saved) {
-    try {
-        const m = JSON.parse(saved);
-        playMovie(m.url, m.title, m.image, true);
-    } catch(e) {}
-}
+// ══════════════════════════════════════════
+//  INIT — تحقق من الجلسة عند فتح الموقع
+// ══════════════════════════════════════════
+(async () => {
+    const { data } = await sb.auth.getSession();
+    if (data.session?.user) {
+        await enterSite(data.session.user);
+    }
+})();
 </script>
 </body>
 </html>
