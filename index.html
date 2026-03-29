@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+H<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -435,44 +435,113 @@
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .movie-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 30px rgba(229,9,20,0.25); border-color: rgba(229,9,20,0.3); }
+        .movie-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(229,9,20,0.3); border-color: rgba(229,9,20,0.4); }
         .card-image-wrap { position: relative; height: 280px; overflow: hidden; }
         .movie-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
-        .movie-card:hover img { transform: scale(1.05); }
+        .movie-card:hover img { transform: scale(1.08); }
         .card-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
             opacity: 0; transition: opacity var(--speed);
             display: flex; align-items: center; justify-content: center;
         }
         .movie-card:hover .card-overlay { opacity: 1; }
         .play-btn-circle {
-            width: 56px; height: 56px; background: var(--red); border-radius: 50%;
+            width: 60px; height: 60px; background: var(--red); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            transform: scale(0.8); transition: transform var(--speed);
-            box-shadow: 0 0 20px var(--glow);
+            transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 0 30px var(--glow), 0 0 60px rgba(229,9,20,0.2);
         }
         .movie-card:hover .play-btn-circle { transform: scale(1); }
-        .play-btn-circle svg { width: 24px; height: 24px; fill: white; margin-right: -2px; }
+        .play-btn-circle svg { width: 26px; height: 26px; fill: white; margin-right: -2px; }
+ 
+        /* شارة التقييم على الصورة */
+        .card-rating-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,200,0,0.3);
+            border-radius: 8px; padding: 3px 8px;
+            display: flex; align-items: center; gap: 4px;
+            font-size: 12px; font-weight: 700; color: #ffd700;
+            opacity: 0; transition: opacity var(--speed);
+        }
+        .card-rating-badge.has-rating { opacity: 1; }
+        .movie-card:hover .card-rating-badge { opacity: 1; }
+ 
         .fav-btn {
             position: absolute; top: 10px; left: 10px;
-            width: 34px; height: 34px; background: rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+            width: 34px; height: 34px; background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all var(--speed); z-index: 10; opacity: 0;
         }
         .movie-card:hover .fav-btn { opacity: 1; }
-        .fav-btn.active { opacity: 1; background: rgba(229,9,20,0.3); border-color: var(--red); }
+        .fav-btn.active { opacity: 1; background: rgba(229,9,20,0.4); border-color: var(--red); }
         .fav-btn svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; transition: all var(--speed); }
         .fav-btn.active svg { fill: var(--red); stroke: var(--red); }
-        .fav-btn:hover { transform: scale(1.1); }
+        .fav-btn:hover { transform: scale(1.15); }
+ 
         .card-info { padding: 12px 14px 14px; }
-        .card-title { font-size: 14px; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
-        .card-meta { display: flex; align-items: center; justify-content: space-between; }
+        .card-title { font-size: 14px; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
+        .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
         .card-year { font-size: 12px; color: var(--text-muted); }
         .card-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
         .badge-dubbed { background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
         .badge-sub { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+ 
+        /* نظام التقييم بالنجوم */
+        .card-stars {
+            display: flex; gap: 2px; margin-top: 6px;
+            opacity: 0; transition: opacity var(--speed);
+        }
+        .movie-card:hover .card-stars { opacity: 1; }
+        .star {
+            font-size: 14px; cursor: pointer;
+            color: #444; transition: color 0.15s, transform 0.15s;
+            line-height: 1;
+        }
+        .star:hover, .star.active { color: #ffd700; transform: scale(1.2); }
+        .star.active ~ .star { color: #444; }
+ 
+        /* MODAL التقييم */
+        .rating-modal {
+            position: fixed; inset: 0; z-index: 3000;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .rating-modal.open { opacity: 1; pointer-events: all; }
+        .rating-box {
+            background: #1a1a24; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; padding: 2rem; text-align: center;
+            max-width: 320px; width: 90%;
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .rating-modal.open .rating-box { transform: scale(1); }
+        .rating-box img { width: 80px; height: 110px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem; }
+        .rating-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; }
+        .rating-box p { font-size: 12px; color: var(--text-muted); margin-bottom: 1.2rem; }
+        .rating-stars-big { display: flex; gap: 8px; justify-content: center; margin-bottom: 1.2rem; }
+        .star-big {
+            font-size: 32px; cursor: pointer;
+            color: #333; transition: color 0.15s, transform 0.2s;
+            filter: drop-shadow(0 0 0 transparent);
+        }
+        .star-big:hover { transform: scale(1.3); filter: drop-shadow(0 0 8px rgba(255,215,0,0.6)); }
+        .star-big.lit { color: #ffd700; }
+        .rating-label { font-size: 18px; font-weight: 900; color: #ffd700; min-height: 28px; margin-bottom: 1rem; }
+        .rating-submit {
+            padding: 0.7rem 2rem; background: var(--red); color: white;
+            border: none; border-radius: 10px; font-family: 'Cairo', sans-serif;
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+        }
+        .rating-submit:hover { background: var(--red-dark); }
+        .rating-close-btn {
+            position: absolute; top: 15px; left: 15px;
+            background: none; border: none; color: var(--text-muted);
+            font-size: 20px; cursor: pointer; padding: 5px;
+        }
  
         /* WATCHLIST PANEL */
         .watchlist-panel {
@@ -607,7 +676,7 @@
             </div>
             <div class="auth-field">
                 <label>كلمة المرور</label>
-                <input type="password" id="regPassword" placeholder="يرجى ادخال كلمة مرور البريد الالكتروني " />
+                <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
             </div>
             <div class="auth-field">
                 <label>تأكيد كلمة المرور</label>
@@ -754,6 +823,25 @@
         <div class="footer-logo">RAOUIA <span>Movies</span></div>
         <div class="footer-text">تم التصميم بحب 💖 | مكتبة أفلام راوية &copy; 2026</div>
     </footer>
+ 
+    <!-- RATING MODAL -->
+    <div class="rating-modal" id="ratingModal">
+        <div class="rating-box" style="position:relative">
+            <button class="rating-close-btn" onclick="closeRating()">✕</button>
+            <img id="ratingImg" src="" alt="">
+            <h3 id="ratingTitle">—</h3>
+            <p>قيّم هذا الفيلم</p>
+            <div class="rating-stars-big" id="ratingStars">
+                <span class="star-big" data-v="1">★</span>
+                <span class="star-big" data-v="2">★</span>
+                <span class="star-big" data-v="3">★</span>
+                <span class="star-big" data-v="4">★</span>
+                <span class="star-big" data-v="5">★</span>
+            </div>
+            <div class="rating-label" id="ratingLabel">اختر تقييمك</div>
+            <button class="rating-submit" onclick="submitRating()">حفظ التقييم</button>
+        </div>
+    </div>
  
 </div><!-- end mainSite -->
  
@@ -907,8 +995,53 @@ let hlsPlayer = null;
 let currentFilter = 'all';
 let watchlist = JSON.parse(localStorage.getItem('raouia_watchlist') || '[]');
 let recentlyWatched = JSON.parse(localStorage.getItem('raouia_recent') || '[]');
+let ratings = JSON.parse(localStorage.getItem('raouia_ratings') || '{}');
 let currentSearch = '';
 let siteInitialized = false;
+let currentRatingMovie = null;
+let selectedRating = 0;
+ 
+const ratingLabels = ['','ضعيف 😕','مقبول 😐','جيد 🙂','رائع 😍','ممتاز 🤩'];
+ 
+function openRating(title, image, idx) {
+    currentRatingMovie = { title, image, idx };
+    selectedRating = ratings[title] || 0;
+    document.getElementById('ratingTitle').textContent = title;
+    document.getElementById('ratingImg').src = image;
+    updateRatingStars(selectedRating);
+    document.getElementById('ratingLabel').textContent = selectedRating ? ratingLabels[selectedRating] : 'اختر تقييمك';
+    document.getElementById('ratingModal').classList.add('open');
+}
+ 
+function closeRating() {
+    document.getElementById('ratingModal').classList.remove('open');
+    currentRatingMovie = null;
+}
+ 
+function updateRatingStars(val) {
+    document.querySelectorAll('.star-big').forEach(s => {
+        s.classList.toggle('lit', parseInt(s.dataset.v) <= val);
+    });
+}
+ 
+document.addEventListener('click', e => {
+    const star = e.target.closest('.star-big');
+    if (star) {
+        selectedRating = parseInt(star.dataset.v);
+        updateRatingStars(selectedRating);
+        document.getElementById('ratingLabel').textContent = ratingLabels[selectedRating];
+    }
+    if (e.target === document.getElementById('ratingModal')) closeRating();
+});
+ 
+function submitRating() {
+    if (!selectedRating || !currentRatingMovie) return;
+    ratings[currentRatingMovie.title] = selectedRating;
+    localStorage.setItem('raouia_ratings', JSON.stringify(ratings));
+    showToast('⭐', `تم تقييم الفيلم بـ ${selectedRating} نجوم`);
+    closeRating();
+    applyFilter(); // إعادة رسم البطاقات
+}
  
 function initSite() {
     if (siteInitialized) return;
@@ -929,11 +1062,6 @@ function initSite() {
         });
     });
  
-    document.getElementById('searchInput').addEventListener('input', e => {
-        currentSearch = e.target.value.toLowerCase().trim();
-        applyFilter();
-    });
- 
     window.addEventListener('scroll', () => {
         document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     });
@@ -943,6 +1071,12 @@ function initSite() {
         try { const m = JSON.parse(saved); playMovie(m.url, m.title, m.image, true); } catch(e) {}
     }
 }
+ 
+// البحث خارج initSite حتى يعمل دائماً
+document.getElementById('searchInput').addEventListener('input', e => {
+    currentSearch = e.target.value.toLowerCase().trim();
+    applyFilter();
+});
  
 function extractYear(title) { const m = title.match(/\b(19|20)\d{2}\b/); return m ? m[0] : ''; }
 function getBadge(title) {
@@ -961,6 +1095,8 @@ function renderMovies(list = moviesData) {
     container.innerHTML = '';
     list.forEach((movie, i) => {
         const isFav = watchlist.some(w => w.title === movie.title);
+        const myRating = ratings[movie.title] || 0;
+        const ratingLabels = ['','ضعيف 😕','مقبول 😐','جيد 🙂','رائع 😍','ممتاز 🤩'];
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.style.animationDelay = `${(i % 12) * 0.05}s`;
@@ -968,6 +1104,9 @@ function renderMovies(list = moviesData) {
             <div class="card-image-wrap">
                 <img src="${movie.image}" alt="${movie.title}" loading="lazy" onerror="this.src='https://placehold.co/200x280/181818/555?text=%F0%9F%8E%AC'">
                 <div class="card-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+                <div class="card-rating-badge ${myRating ? 'has-rating' : ''}" id="badge-${i}">
+                    ★ ${myRating || ''}
+                </div>
                 <button class="fav-btn ${isFav ? 'active' : ''}">
                     <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </button>
@@ -975,13 +1114,23 @@ function renderMovies(list = moviesData) {
             <div class="card-info">
                 <div class="card-title" title="${movie.title}">${movie.title}</div>
                 <div class="card-meta"><span class="card-year">${extractYear(movie.title)}</span>${getBadge(movie.title)}</div>
+                <div class="card-stars">
+                    ${'★★★★★'.split('').map((s,si) => `<span class="star ${si < myRating ? 'active' : ''}" data-i="${i}" data-v="${si+1}">${s}</span>`).join('')}
+                </div>
             </div>`;
         card.querySelector('.fav-btn').addEventListener('click', function(e) {
             e.stopPropagation();
             toggleFav(this, movie.title, movie.image, movie.url);
         });
+        // النجوم الصغيرة تفتح modal التقييم
+        card.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openRating(movie.title, movie.image, i);
+            });
+        });
         card.addEventListener('click', (e) => {
-            if (e.target.closest('.fav-btn')) return;
+            if (e.target.closest('.fav-btn') || e.target.closest('.star')) return;
             playMovie(movie.url, movie.title, movie.image);
         });
         container.appendChild(card);
@@ -1023,13 +1172,20 @@ function playMovie(url, title, image, isInitial = false) {
     renderRecent();
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (Hls.isSupported()) {
-        hlsPlayer = new Hls({ autoStartLoad: false });
+        hlsPlayer = new Hls({
+            autoStartLoad: true,
+            startLevel: -1,
+            capLevelToPlayerSize: true,
+            maxBufferLength: 30,
+            maxMaxBufferLength: 60,
+        });
         hlsPlayer.loadSource(url);
         hlsPlayer.attachMedia(video);
+        hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(() => {}); });
         hlsPlayer.on(Hls.Events.ERROR, (e, data) => { if (data.fatal) errorDiv.classList.add('show'); });
-        video.addEventListener('play', () => hlsPlayer.startLoad(), { once: true });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = url;
+        video.play().catch(() => {});
     }
     video.onerror = () => errorDiv.classList.add('show');
 }
