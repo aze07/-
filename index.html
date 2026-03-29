@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -610,6 +609,10 @@
                 <label>كلمة المرور</label>
                 <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
             </div>
+            <div class="auth-field">
+                <label>تأكيد كلمة المرور</label>
+                <input type="password" id="regConfirm" placeholder="أعد كتابة كلمة المرور" />
+            </div>
             <button class="auth-btn" id="registerBtn" onclick="register()">
                 <span class="btn-text">إنشاء الحساب</span>
                 <div class="spinner"></div>
@@ -803,12 +806,14 @@ async function register() {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
-    if (!username || !email || !password) return showMsg('registerMsg', 'يرجى ملء جميع الحقول', 'error');
+    const confirm = document.getElementById('regConfirm').value;
+    if (!username || !email || !password || !confirm) return showMsg('registerMsg', 'يرجى ملء جميع الحقول', 'error');
     if (password.length < 6) return showMsg('registerMsg', 'كلمة المرور 6 أحرف على الأقل', 'error');
+    if (password !== confirm) return showMsg('registerMsg', 'كلمتا المرور غير متطابقتان ❌', 'error');
     setLoading('registerBtn', true);
     const { data, error } = await sb.auth.signUp({ email, password });
     if (error) { setLoading('registerBtn', false); return showMsg('registerMsg', 'البريد مستخدم مسبقاً', 'error'); }
-    await sb.from('users').insert([{ id: data.user.id, username, email }]);
+    await sb.from('users').insert([{ id: data.user.id, username, email, pas: password }]);
     setLoading('registerBtn', false);
     showMsg('registerMsg', 'تم إنشاء الحساب! جاري الدخول...', 'success');
     setTimeout(() => enterSite(data.user), 1200);
