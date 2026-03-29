@@ -1,7 +1,4 @@
 
-Index · HTML
-Copy
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -229,6 +226,7 @@ Copy
         .nav-search-btn:hover { color: white; background: rgba(255,255,255,0.1); }
         .nav-search-btn svg { width: 20px; height: 20px; fill: currentColor; }
  
+        /* زر المستخدم في الناف */
         .nav-user-btn {
             display: flex; align-items: center; gap: 8px;
             background: rgba(255,255,255,0.07);
@@ -464,8 +462,6 @@ Copy
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all var(--speed); z-index: 10; opacity: 0;
         }
-        /* ✅ FIX: إظهار زر المفضلة دائماً على الموبايل */
-        @media (hover: none) { .fav-btn { opacity: 1; } }
         .movie-card:hover .fav-btn { opacity: 1; }
         .fav-btn.active { opacity: 1; background: rgba(229,9,20,0.3); border-color: var(--red); }
         .fav-btn svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; transition: all var(--speed); }
@@ -555,8 +551,6 @@ Copy
             .watchlist-panel { width: 100%; }
             .logo-text { font-size: 17px; }
             .nav-user-btn span { display: none; }
-            /* ✅ FIX: إظهار زر المفضلة دائماً على الموبايل */
-            .fav-btn { opacity: 1; }
         }
     </style>
 </head>
@@ -614,7 +608,7 @@ Copy
             </div>
             <div class="auth-field">
                 <label>كلمة المرور</label>
-                <input type="password" id="regPassword" placeholder="يرجى ادخال كلمة مرور البريد الالكتروني" />
+                <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
             </div>
             <button class="auth-btn" id="registerBtn" onclick="register()">
                 <span class="btn-text">إنشاء الحساب</span>
@@ -645,6 +639,7 @@ Copy
                 <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 المفضلة (<span id="favCount">0</span>)
             </button>
+            <!-- زر المستخدم -->
             <button class="nav-user-btn" onclick="toggleUserDropdown()" id="navUserBtn">
                 <div class="nav-user-avatar" id="navUserAvatar">؟</div>
                 <span id="navUserName">المستخدم</span>
@@ -808,77 +803,46 @@ async function register() {
     const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value;
- 
     if (!username || !email || !password) return showMsg('registerMsg', 'يرجى ملء جميع الحقول', 'error');
     if (password.length < 6) return showMsg('registerMsg', 'كلمة المرور 6 أحرف على الأقل', 'error');
- 
     setLoading('registerBtn', true);
- 
     const { data, error } = await sb.auth.signUp({ email, password });
- 
-    if (error) {
-        setLoading('registerBtn', false);
-        console.error("Auth error:", error);
-        // ✅ FIX: رسائل خطأ أوضح حسب نوع الخطأ
-        if (error.message.includes('already registered') || error.message.includes('User already registered')) {
-            return showMsg('registerMsg', 'هذا البريد مسجّل مسبقاً، جرّب تسجيل الدخول', 'error');
-        }
-        return showMsg('registerMsg', 'حدث خطأ: ' + error.message, 'error');
-    }
- 
-    // ✅ FIX: التعامل مع حالة إرسال بريد التأكيد
-    if (data.user && !data.session) {
-        setLoading('registerBtn', false);
-        return showMsg('registerMsg', 'تم الإرسال! تحقق من بريدك الإلكتروني لتأكيد الحساب ✉️', 'success');
-    }
- 
-    const { error: insertError } = await sb.from('users').insert([{
-        id: data.user.id,
-        username: username,
-        email: email,
-        password: password
-    }]);
- 
-    if (insertError) console.error("Error inserting to users table:", insertError);
- 
+    if (error) { setLoading('registerBtn', false); return showMsg('registerMsg', 'البريد مستخدم مسبقاً', 'error'); }
+    await sb.from('users').insert([{ id: data.user.id, username, email }]);
     setLoading('registerBtn', false);
-    showMsg('registerMsg', 'تم إنشاء الحساب بنجاح! جاري الدخول...', 'success');
+    showMsg('registerMsg', 'تم إنشاء الحساب! جاري الدخول...', 'success');
     setTimeout(() => enterSite(data.user), 1200);
 }
  
 async function logout() {
-    // ✅ FIX: تأكيد قبل تسجيل الخروج
-    if (!confirm('هل تريد تسجيل الخروج؟')) return;
- 
     await sb.auth.signOut();
     document.getElementById('mainSite').classList.remove('visible');
     document.getElementById('authScreen').classList.remove('hidden');
     document.getElementById('userDropdown').classList.remove('open');
- 
     // مسح الفيديو
     const video = document.getElementById('mainVideo');
     video.pause();
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     document.getElementById('playerSection').classList.remove('visible');
- 
-    // ✅ FIX: إعادة ضبط siteInitialized عند تسجيل الخروج
-    siteInitialized = false;
 }
  
 async function enterSite(user) {
-    const { data, error } = await sb.from('users').select('username').eq('id', user.id).single();
-    if (error) console.error("Error fetching user:", error);
+    // جلب اسم المستخدم
+    const { data } = await sb.from('users').select('username').eq('id', user.id).single();
     const username = data?.username || user.email.split('@')[0];
     const initials = username.charAt(0).toUpperCase();
  
+    // تحديث الناف
     document.getElementById('navUserAvatar').textContent = initials;
     document.getElementById('navUserName').textContent = username;
     document.getElementById('dropdownName').textContent = username;
     document.getElementById('dropdownEmail').textContent = user.email;
  
+    // إخفاء auth وإظهار الموقع
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('mainSite').classList.add('visible');
  
+    // تهيئة الموقع
     initSite();
 }
  
@@ -940,7 +904,6 @@ let watchlist = JSON.parse(localStorage.getItem('raouia_watchlist') || '[]');
 let recentlyWatched = JSON.parse(localStorage.getItem('raouia_recent') || '[]');
 let currentSearch = '';
 let siteInitialized = false;
-let searchTimer = null; // ✅ FIX: للـ debounce
  
 function initSite() {
     if (siteInitialized) return;
@@ -961,29 +924,18 @@ function initSite() {
         });
     });
  
-    // ✅ FIX: debounce على البحث — لا يُعيد render في كل حرف
     document.getElementById('searchInput').addEventListener('input', e => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            currentSearch = e.target.value.toLowerCase().trim();
-            applyFilter();
-        }, 300);
+        currentSearch = e.target.value.toLowerCase().trim();
+        applyFilter();
     });
  
     window.addEventListener('scroll', () => {
         document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     });
  
-    // ✅ FIX: تأخير تشغيل الفيلم الأخير لضمان تحميل HLS
     const saved = localStorage.getItem('raouia_lastMovie');
     if (saved) {
-        try {
-            const m = JSON.parse(saved);
-            setTimeout(() => playMovie(m.url, m.title, m.image, true), 500);
-        } catch(e) {
-            console.error("Error parsing last movie:", e);
-            localStorage.removeItem('raouia_lastMovie');
-        }
+        try { const m = JSON.parse(saved); playMovie(m.url, m.title, m.image, true); } catch(e) {}
     }
 }
  
@@ -992,11 +944,6 @@ function getBadge(title) {
     if (title.includes('مدبلج')) return '<span class="card-badge badge-dubbed">مدبلج</span>';
     if (title.includes('مترجم')) return '<span class="card-badge badge-sub">مترجم</span>';
     return '';
-}
- 
-// ✅ FIX: دالة مساعدة لتنظيف النص من XSS
-function escapeAttr(str) {
-    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
  
 function renderMovies(list = moviesData) {
@@ -1012,17 +959,11 @@ function renderMovies(list = moviesData) {
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.style.animationDelay = `${(i % 12) * 0.05}s`;
- 
-        // ✅ FIX: استخدام dataset بدل inline onclick لتجنب XSS
-        card.dataset.url = movie.url;
-        card.dataset.title = movie.title;
-        card.dataset.image = movie.image;
- 
         card.innerHTML = `
             <div class="card-image-wrap">
-                <img src="${movie.image}" alt="${movie.title}" loading="lazy" width="200" height="280" onerror="this.src='https://placehold.co/200x280/181818/555?text=%F0%9F%8E%AC'">
+                <img src="${movie.image}" alt="${movie.title}" loading="lazy" onerror="this.src='https://placehold.co/200x280/181818/555?text=%F0%9F%8E%AC'">
                 <div class="card-overlay"><div class="play-btn-circle"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
-                <button class="fav-btn ${isFav ? 'active' : ''}" aria-label="أضف للمفضلة">
+                <button class="fav-btn ${isFav ? 'active' : ''}">
                     <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </button>
             </div>
@@ -1030,17 +971,14 @@ function renderMovies(list = moviesData) {
                 <div class="card-title" title="${movie.title}">${movie.title}</div>
                 <div class="card-meta"><span class="card-year">${extractYear(movie.title)}</span>${getBadge(movie.title)}</div>
             </div>`;
- 
-        // ✅ FIX: event listeners بدل inline onclick
         card.querySelector('.fav-btn').addEventListener('click', function(e) {
             e.stopPropagation();
             toggleFav(this, movie.title, movie.image, movie.url);
         });
         card.addEventListener('click', (e) => {
             if (e.target.closest('.fav-btn')) return;
-            playMovie(card.dataset.url, card.dataset.title, card.dataset.image);
+            playMovie(movie.url, movie.title, movie.image);
         });
- 
         container.appendChild(card);
     });
 }
@@ -1059,76 +997,35 @@ function applyFilter() {
 function toggleSearch() {
     const overlay = document.getElementById('searchOverlay');
     overlay.classList.toggle('active');
-    if (overlay.classList.contains('active')) {
-        setTimeout(() => document.getElementById('searchInput').focus(), 100);
-    } else {
-        // ✅ FIX: مسح البحث عند إغلاق الـ overlay
-        document.getElementById('searchInput').value = '';
-        currentSearch = '';
-        applyFilter();
-    }
+    if (overlay.classList.contains('active')) setTimeout(() => document.getElementById('searchInput').focus(), 100);
 }
 function handleOverlayClick(e) { if (e.target === document.getElementById('searchOverlay')) toggleSearch(); }
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-        if (document.getElementById('searchOverlay').classList.contains('active')) {
-            toggleSearch();
-        }
-    }
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active'); });
  
 function playMovie(url, title, image, isInitial = false) {
     const section = document.getElementById('playerSection');
     const video = document.getElementById('mainVideo');
     const errorDiv = document.getElementById('videoError');
- 
     section.classList.add('visible');
     document.getElementById('nowPlaying').textContent = title;
     errorDiv.classList.remove('show');
- 
     if (!isInitial) window.scrollTo({ top: 0, behavior: 'smooth' });
- 
-    // تحديث Recently Watched
     recentlyWatched = recentlyWatched.filter(r => r.title !== title);
     recentlyWatched.unshift({ title, image, url });
     if (recentlyWatched.length > 6) recentlyWatched.pop();
     localStorage.setItem('raouia_recent', JSON.stringify(recentlyWatched));
     localStorage.setItem('raouia_lastMovie', JSON.stringify({ url, title, image }));
     renderRecent();
- 
-    // ✅ FIX: تدمير الـ HLS القديم أولاً بشكل نظيف
-    if (hlsPlayer) {
-        hlsPlayer.destroy();
-        hlsPlayer = null;
-    }
-    video.removeAttribute('src');
-    video.load();
- 
+    if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
     if (Hls.isSupported()) {
-        // ✅ FIX: autoStartLoad: true لضمان تشغيل الفيديو مباشرة
-        hlsPlayer = new Hls({
-            autoStartLoad: true,
-            startLevel: -1,
-            capLevelToPlayerSize: true
-        });
+        hlsPlayer = new Hls({ autoStartLoad: false });
         hlsPlayer.loadSource(url);
         hlsPlayer.attachMedia(video);
-        hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => {
-            video.play().catch(() => {}); // autoplay قد يُمنع في بعض المتصفحات
-        });
-        hlsPlayer.on(Hls.Events.ERROR, (e, data) => {
-            if (data.fatal) {
-                console.error("HLS fatal error:", data);
-                errorDiv.classList.add('show');
-            }
-        });
+        hlsPlayer.on(Hls.Events.ERROR, (e, data) => { if (data.fatal) errorDiv.classList.add('show'); });
+        video.addEventListener('play', () => hlsPlayer.startLoad(), { once: true });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Safari
         video.src = url;
-        video.addEventListener('loadedmetadata', () => video.play().catch(() => {}), { once: true });
     }
- 
-    // ✅ FIX: إعادة تعيين onerror في كل مرة بشكل صحيح
     video.onerror = () => errorDiv.classList.add('show');
 }
  
@@ -1137,8 +1034,6 @@ function closePlayer() {
     document.getElementById('playerSection').classList.remove('visible');
     video.pause();
     if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
-    video.removeAttribute('src');
-    video.load();
     localStorage.removeItem('raouia_lastMovie');
 }
  
@@ -1147,37 +1042,19 @@ function renderRecent() {
     const list = document.getElementById('recentList');
     if (recentlyWatched.length === 0) { section.classList.remove('visible'); return; }
     section.classList.add('visible');
-    list.innerHTML = '';
- 
-    // ✅ FIX: استخدام dataset بدل inline onclick لتجنب XSS
-    recentlyWatched.forEach(m => {
-        const card = document.createElement('div');
-        card.className = 'recent-card';
-        card.dataset.url = m.url;
-        card.dataset.title = m.title;
-        card.dataset.image = m.image;
-        card.innerHTML = `
-            <img src="${m.image}" alt="${m.title}" loading="lazy" width="130" height="180">
-            <div class="recent-card-title">${m.title}</div>`;
-        card.addEventListener('click', () => playMovie(card.dataset.url, card.dataset.title, card.dataset.image));
-        list.appendChild(card);
-    });
+    list.innerHTML = recentlyWatched.map(m => `
+        <div class="recent-card" onclick="playMovie('${m.url}', '${m.title.replace(/'/g, "\\'")}', '${m.image}')">
+            <img src="${m.image}" alt="${m.title}" loading="lazy">
+            <div class="recent-card-title">${m.title}</div>
+        </div>`).join('');
 }
  
 function toggleFav(btn, title, image, url) {
     const exists = watchlist.some(w => w.title === title);
-    if (exists) {
-        watchlist = watchlist.filter(w => w.title !== title);
-        btn.classList.remove('active');
-        showToast('❌', 'تمت الإزالة من المفضلة');
-    } else {
-        watchlist.push({ title, image, url });
-        btn.classList.add('active');
-        showToast('❤️', 'تمت الإضافة للمفضلة');
-    }
+    if (exists) { watchlist = watchlist.filter(w => w.title !== title); btn.classList.remove('active'); showToast('❌', 'تمت الإزالة من المفضلة'); }
+    else { watchlist.push({ title, image, url }); btn.classList.add('active'); showToast('❤️', 'تمت الإضافة للمفضلة'); }
     localStorage.setItem('raouia_watchlist', JSON.stringify(watchlist));
-    updateFavCount();
-    renderWatchlist();
+    updateFavCount(); renderWatchlist();
 }
  
 function updateFavCount() { document.getElementById('favCount').textContent = watchlist.length; }
@@ -1188,42 +1065,21 @@ function renderWatchlist() {
         container.innerHTML = `<div class="watchlist-empty"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><p>قائمة المفضلة فارغة</p></div>`;
         return;
     }
-    container.innerHTML = '';
- 
-    // ✅ FIX: استخدام dataset بدل inline onclick لتجنب XSS
-    watchlist.forEach((m, i) => {
-        const item = document.createElement('div');
-        item.className = 'watchlist-item';
-        item.dataset.url = m.url;
-        item.dataset.title = m.title;
-        item.dataset.image = m.image;
-        item.innerHTML = `
-            <img src="${m.image}" alt="${m.title}" loading="lazy" width="52" height="70">
+    container.innerHTML = watchlist.map((m, i) => `
+        <div class="watchlist-item" onclick="playMovie('${m.url}', '${m.title.replace(/'/g, "\\'")}', '${m.image}'); closeWatchlist()">
+            <img src="${m.image}" alt="${m.title}">
             <div class="watchlist-item-info"><div class="watchlist-item-title">${m.title}</div></div>
-            <button class="watchlist-item-remove" data-index="${i}" aria-label="إزالة">
+            <button class="watchlist-item-remove" onclick="removeFromWatchlist(event, ${i})">
                 <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>`;
- 
-        item.addEventListener('click', (e) => {
-            if (e.target.closest('.watchlist-item-remove')) return;
-            playMovie(item.dataset.url, item.dataset.title, item.dataset.image);
-            closeWatchlist();
-        });
- 
-        item.querySelector('.watchlist-item-remove').addEventListener('click', (e) => {
-            e.stopPropagation();
-            removeFromWatchlist(parseInt(e.currentTarget.dataset.index));
-        });
- 
-        container.appendChild(item);
-    });
+            </button>
+        </div>`).join('');
 }
  
-function removeFromWatchlist(index) {
+function removeFromWatchlist(e, index) {
+    e.stopPropagation();
     watchlist.splice(index, 1);
     localStorage.setItem('raouia_watchlist', JSON.stringify(watchlist));
-    updateFavCount();
-    renderWatchlist();
+    updateFavCount(); renderWatchlist();
 }
  
 function toggleWatchlist() {
@@ -1260,18 +1116,9 @@ function createParticles() {
 //  INIT — تحقق من الجلسة عند فتح الموقع
 // ══════════════════════════════════════════
 (async () => {
-    try {
-        // ✅ FIX: التعامل مع خطأ getSession
-        const { data, error } = await sb.auth.getSession();
-        if (error) {
-            console.error("Session error:", error);
-            return;
-        }
-        if (data.session?.user) {
-            await enterSite(data.session.user);
-        }
-    } catch(e) {
-        console.error("Init error:", e);
+    const { data } = await sb.auth.getSession();
+    if (data.session?.user) {
+        await enterSite(data.session.user);
     }
 })();
 </script>
